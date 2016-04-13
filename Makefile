@@ -1,4 +1,4 @@
-MARKDOWN=python -m markdown -x markdown.extensions.tables
+MARKDOWN=python -m markdown -e utf8 -o html -x markdown.extensions.tables
 
-portable-simd.html: portable-simd.md
+portable-simd.html: portable-simd.md Makefile
 	$(MARKDOWN) $< > $@
