@@ -437,7 +437,195 @@ Semantics: `lane[i] = (a[i] >= b[i])`.
 
 
 ## Load and store
+
+## Floating-point sign bit operations
+
+These floating point operations are simple manipulations of the sign bit. No
+changes are made to the exponent or trailing bignificand bits, even for NaN
+inputs.
+
+### Negation
+* `f32x4.neg(a: v128) -> v128`
+* `f64x2.neg(a: v128) -> v128`
+
+Apply the IEEE `negate(x)` function to each lane: `lane[i] = -a[i]`. This simply
+inverts the sign bit, preserving all other bits.
+
+### Absolute value
+* `f32x4.neg(a: v128) -> v128`
+* `f64x2.neg(a: v128) -> v128`
+
+Apply the IEEE `abs(x)` function to each lane: `lane[i] = IEEE.abs(a[i])`. This
+simply clears the sign bit, preserving all other bits.
+
+## Floating-point min and max
+
+These operations are not part of the IEEE 754-2008 standard. Notably, the
+`minNum` and `maxNum` operations defined here behave differently than the IEEE
+`minNum` and `maxNum` operations when one operand is a signaling NaN.
+
+### NaN-propagating minimum
+* `f32x4.min(a: v128, b: v128) -> v128`
+* `f64x2.min(a: v128, b: v128) -> v128`
+
+Lane-wise minimum value, propagating NaNs:
+```python
+def min(a, b):
+    if isnan(a) or isnan(b):
+        return propagate_nan(a, b)
+    if a < b:
+        return a
+    else:
+        return b
+```
+
+### NaN-propagating maximum
+* `f32x4.max(a: v128, b: v128) -> v128`
+* `f64x2.max(a: v128, b: v128) -> v128`
+
+Lane-wise maximum value, propagating NaNs:
+```python
+def max(a, b):
+    if isnan(a) or isnan(b):
+        return propagate_nan(a, b)
+    if a > b:
+        return a
+    else:
+        return b
+```
+
+### NaN-suppressing minimum
+* `f32x4.minNum(a: v128, b: v128) -> v128`
+* `f64x2.minNum(a: v128, b: v128) -> v128`
+
+Lane-wise minimum value, suppressing single NaNs:
+```python
+def minNum(a, b):
+    if isnan(a) and isnan(b):
+        return propagate_nan(a, b)
+    if isnan(a):
+        return b
+    if isnan(b):
+        return a
+    if a < b:
+        return a
+    else:
+        return b
+```
+
+Note that this function behaves differently than the IEEE 754 `minNum` function
+when one of the operands is a signaling NaN.
+
+### NaN-suppressing maximum
+* `f32x4.maxNum(a: v128, b: v128) -> v128`
+* `f64x2.maxNum(a: v128, b: v128) -> v128`
+
+Lane-wise maximum value, suppressing single NaNs:
+```python
+def maxNum(a, b):
+    if isnan(a) and isnan(b):
+        return propagate_nan(a, b)
+    if isnan(a):
+        return b
+    if isnan(b):
+        return a
+    if a > b:
+        return a
+    else:
+        return b
+```
+
+Note that this function behaves differently than the IEEE 754 `maxNum` function
+when one of the operands is a signaling NaN.
+
 ## Floating-point arithmetic
+
+### Addition
+* `f32x4.add(a: v128, b: v128) -> v128`
+* `f64x2.add(a: v128, b: v128) -> v128`
+
+Lane-wise IEEE `addition`.
+
+### Subtraction
+* `f32x4.sub(a: v128, b: v128) -> v128`
+* `f64x2.sub(a: v128, b: v128) -> v128`
+
+Lane-wise IEEE `subtraction`.
+
+### Division
+* `f32x4.div(a: v128, b: v128) -> v128`
+* `f64x2.div(a: v128, b: v128) -> v128`
+
+Lane-wise IEEE `division`.
+
+### Multiplication
+* `f32x4.mul(a: v128, b: v128) -> v128`
+* `f64x2.mul(a: v128, b: v128) -> v128`
+
+Lane-wise IEEE `multiplication`.
+
+### Square root
+* `f32x4.sqrt(a: v128) -> v128`
+* `f64x2.sqrt(a: v128) -> v128`
+
+Lane-wise IEEE `squareRoot`.
+
+### Reciprocal approximation
+* `f32x4.reciprocalApproximation(a: v128) -> v128`
+* `f64x2.reciprocalApproximation(a: v128) -> v128`
+
+Implementation-dependent approximation to the reciprocal.
+```python
+def reciprocalApproximation(a):
+    if isnan(a):
+        return propagate_nan(a)
+    if a == 0.0:
+        # +0.0 -> +Inf, -0.0 -> -Inf.
+        return 1/a
+    if isinf(a):
+        # +Inf -> +0.0, -Inf -> -0.0.
+        return 1/a
+    return implementation_depedent(a)
+```
+
+### Reciprocal square root approximation
+* `f32x4.reciprocalSqrtApproximation(a: v128) -> v128`
+* `f64x2.reciprocalSqrtApproximation(a: v128) -> v128`
+
+Implementation-dependent approximation to the reciprocal of the square root.
+```python
+def reciprocalSqrtApproximation(a):
+    if isnan(a):
+        return propagate_nan(a)
+    if a == 0:
+        # +0.0 -> +Inf, -0.0 -> -Inf.
+        return 1/a
+    if isinf(a):
+        # +Inf -> +0.0, -Inf -> -0.0.
+        return 1/a
+    return implementation_depedent(a)
+```
+
+## Conversions
+### Integer to floating point
+* `f32x4.fromInt32x4(a: v128) -> v128`
+* `f64x2.fromInt64x2(a: v128) -> v128`
+* `f32x4.fromUint32x4(a: v128) -> v128`
+* `f64x2.fromUint64x2(a: v128) -> v128`
+
+Lane-wise conversion from integer to floating point. Some integer values will be
+rounded.
+
+### Floating point to integer
+* `s32x4.fromFloat32x4(a: v128) -> (result: v128, fail: boolean)`
+* `s64x2.fromFloat64x2(a: v128) -> (result: v128, fail: boolean)`
+* `u32x4.fromFloat32x4(a: v128) -> (result: v128, fail: boolean)`
+* `u64x2.fromFloat64x2(a: v128) -> (result: v128, fail: boolean)`
+
+Lane-wise conversion from floating point to integer usine the IEEE
+`convertToIntegerTowardZero` function. If any lane is a NaN or the rounded
+integer value is outside the range of the destination type, return `fail = true`
+and an unspecified `result`.
 
 
 [wasm]: https://webassembly.github.io/ (WebAssembly)
