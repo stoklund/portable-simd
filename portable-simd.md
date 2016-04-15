@@ -267,7 +267,7 @@ def S.lanewise_binary(func, a, b):
 Comparison operators produce a boolean vector:
 
 ```python
-def S.apply_comparison(func, a, b):
+def S.lanewise_comparison(func, a, b):
     result = S.BoolType.New()
     for i in range(S.Lanes):
         result[i] = func(a[i], b[i])
@@ -685,7 +685,14 @@ boolean vector with the same number of lanes as the input interpretation.
 
 Integer equality is independent of the signed/unsigned interpretation. Floating
 point equality follows IEEE semantics, so a NaN lane compares not equal with
-anything, including itself: `lane[i] = (a[i] == b[i])`.
+anything, including itself:
+
+```python
+def S.equal(a, b):
+    def eq(x, y):
+        return x == y
+    return S.lanewise_comparison(eq, a, b)
+```
 
 ### Non-equality
 * `i8x16.notEqual(a: v128, b: v128) -> b8x16`
@@ -696,7 +703,13 @@ anything, including itself: `lane[i] = (a[i] == b[i])`.
 * `f64x2.notEqual(a: v128, b: v128) -> b64x2`
 
 The `notEqual` operations produce the inverse of their `equal` counterparts:
-`lane[i] = (a[i] != b[i])`.
+
+```python
+def S.notEqual(a, b):
+    def ne(x, y):
+        return x != y
+    return S.lanewise_comparison(ne, a, b)
+```
 
 ### Less than
 * `s8x16.lessThan(a: v128, b: v128) -> b8x16`
@@ -711,8 +724,14 @@ The `notEqual` operations produce the inverse of their `equal` counterparts:
 * `f64x2.lessThan(a: v128, b: v128) -> b64x2`
 
 Integer magnitude comparisons depend on the signed/unsigned interpretation of
-the lanes. Floating point comparisons follow IEEE semantics: `lane[i] = (a[i] <
-b[i])`.
+the lanes. Floating point comparisons follow IEEE semantics:
+
+```python
+def S.lessThan(a, b):
+    def lt(x, y):
+        return x < y
+    return S.lanewise_comparison(lt, a, b)
+```
 
 ### Less than or equal
 * `s8x16.lessThanOrEqual(a: v128, b: v128) -> b8x16`
@@ -726,7 +745,12 @@ b[i])`.
 * `f32x4.lessThanOrEqual(a: v128, b: v128) -> b32x4`
 * `f64x2.lessThanOrEqual(a: v128, b: v128) -> b64x2`
 
-Semantics: `lane[i] = (a[i] <= b[i])`.
+```python
+def S.lessThanOrEqual(a, b):
+    def le(x, y):
+        return x <= y
+    return S.lanewise_comparison(le, a, b)
+```
 
 ### Greater than
 * `s8x16.greaterThan(a: v128, b: v128) -> b8x16`
@@ -740,7 +764,12 @@ Semantics: `lane[i] = (a[i] <= b[i])`.
 * `f32x4.greaterThan(a: v128, b: v128) -> b32x4`
 * `f64x2.greaterThan(a: v128, b: v128) -> b64x2`
 
-Semantics: `lane[i] = (a[i] > b[i])`.
+```python
+def S.greaterThan(a, b):
+    def gt(x, y):
+        return x > y
+    return S.lanewise_comparison(gt, a, b)
+```
 
 ### Greater than or equal
 * `s8x16.greaterThanOrEqual(a: v128, b: v128) -> b8x16`
@@ -754,8 +783,12 @@ Semantics: `lane[i] = (a[i] > b[i])`.
 * `f32x4.greaterThanOrEqual(a: v128, b: v128) -> b32x4`
 * `f64x2.greaterThanOrEqual(a: v128, b: v128) -> b64x2`
 
-Semantics: `lane[i] = (a[i] >= b[i])`.
-
+```python
+def S.greaterThanOrEqual(a, b):
+    def ge(x, y):
+        return x >= y
+    return S.lanewise_comparison(ge, a, b)
+```
 
 ## Load and store
 
