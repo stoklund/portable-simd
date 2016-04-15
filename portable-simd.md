@@ -114,6 +114,83 @@ Each lane is interpreted as an IEEE floating-point number.
 * `f32x4 : v32x4`: Each lane is an `f32`.
 * `f64x2 : v64x2`: Each lane is an `f64`.
 
+# Floating-point semantics
+
+The floating-point operations in this specification aim to be conforming to
+[IEEE 754-2008][ieee754] while being compatible with WebAssembly and JavaScript.
+Some things which are left unspecified by the IEEE standard are given stricter
+semantics by WebAssembly, such as:
+
+* Default NaN bit patterns.
+* NaN propagation rules.
+* The sign of 0 returned by min/max operations.
+
+## Default NaN value
+
+When a floating-point operation needs to return a NaN, and none of its operands
+are NaN, it generates a default NaN value which is a quiet NaN with an all-zero
+payload field. The sign of the default NaN is not specified:
+
+```python
+def f32.default_nan():
+    if unspecified_choice():
+        bits = 0x7fc00000
+    else:
+        bits = 0xffc00000
+    return f32.from_bits(bits)
+
+def f64.default_nan():
+    if unspecified_choice():
+        bits = 0x7ff80000_00000000
+    else:
+        bits = 0xfff80000_00000000
+    return f64.from_bits(bits)
+```
+
+## Propagating NaN values
+
+When propagating a NaN value from an operand, all the bits of the NaN are
+preserved, except a signaling NaN is quietened by setting the most significand
+bit in the trailing significand field.
+
+```python
+def canonicalize_nan(x):
+    assert isnan(x)
+    t = type(x)
+    assert t == f32 or t == f64
+    bits = x.tobits()
+    if t == f32:
+        bits |= 0x00400000
+    else:
+        bits |= 0x00080000_00000000
+    return t.from_bits(bits)
+```
+
+When two operands are NaN one of them is propagated. Which one is not specified:
+
+```python
+def propagate_nan(x, y):
+    assert isinan(x) or isnan(y)
+    if not isnan(x):
+        return canonicalize_nan(y)
+    if not isnan(y)
+        return canonicalize_nan(x)
+    # Both x and y are NaNs: pick one to propagate.
+    if unspecified_choice():
+        return canonicalize_nan(x)
+    else:
+        return canonicalize_nan(y)
+```
+
+## Subnormal flushing
+
+An implementation is allowed to flush subnormals in arithmetic floating-point
+operations. This means that any subnormal operand is treated as 0, and any
+subnormal result is rounded to 0.
+
+Not that this differs from WebAssembly scalar floating-point semantics which
+requires correct subnormal handling.
+
 # Operations
 
 The SIMD operations described in this sections are generally named
@@ -123,8 +200,34 @@ of a SIMD type. The descriptions below refer to the following properties of `S`:
 * `S.Lanes`: The number of lanes in the interpretation.
 * `S.LaneBits`: The number of bits in each lane.
 * `S.Reduce(x)`: For the integer interpretations: `x mod 2^S.LaneBits`.
-* `S.Clamp(x)`: For the signed and unsigned integer interpretations, clamp `x`
+* `S.Saturate(x)`: For the signed and unsigned integer interpretations, clamp `x`
   to the allowed value range for a lane.
+
+Many operations are simply the lanewise application of a scalar operation:
+
+```python
+def S.apply_unary(func, a):
+    result = S.New()
+    for i in range(S.Lanes):
+        result[i] = func(a[i])
+    return result
+
+def S.apply_binary(func, a, b):
+    result = S.New()
+    for i in range(S.Lanes):
+        result[i] = func(a[i], b[i])
+    return result
+```
+
+Comparison operators produce a boolean vector:
+
+```python
+def S.apply_comparison(func, a, b):
+    result = S.BoolType.New()
+    for i in range(S.Lanes):
+        result[i] = func(a[i], b[i])
+    return result
+```
 
 ## Constructing SIMD values
 
@@ -140,7 +243,15 @@ of a SIMD type. The descriptions below refer to the following properties of `S`:
 * `f32x4.build(x: f32[4]) -> v128`
 * `f64x2.build(x: f64[2]) -> v128`
 
-Construct a vector with `lane[i] = x[i]`.
+Construct a vector from an array of individual lane values.
+
+```python
+def S.build(x):
+    result = S.New()
+    for i in range(S.Lanes):
+        result[i] = x[i]
+    return result
+```
 
 ### Create vector with identical lanes
 * `b8x16.splat(x: boolean) -> b8x16`
@@ -154,7 +265,15 @@ Construct a vector with `lane[i] = x[i]`.
 * `f32x4.splat(x: f32) -> v128`
 * `f64x2.splat(x: f64) -> v128`
 
-Construct a vector with `x` replicated to all lanes: `lane[i] = x`.
+Construct a vector with `x` replicated to all lanes:
+
+```python
+def S.splat(x):
+    result = S.New()
+    for i in range(S.Lanes):
+        result[i] = x
+    return result
+```
 
 ## Accessing lanes
 
@@ -172,6 +291,11 @@ Construct a vector with `x` replicated to all lanes: `lane[i] = x`.
 
 Extract the value of lane `i` in `a`.
 
+```python
+def S.extractLane(a, i):
+    return a[i]
+```
+
 ### Replace lane value
 * `b8x16.replaceLane(a: b8x16, i: LaneIdx16, x: boolean) -> b8x16`
 * `b16x8.replaceLane(a: b16x8, i: LaneIdx8, x: boolean) -> b16x8`
@@ -187,6 +311,15 @@ Extract the value of lane `i` in `a`.
 Return a new vector with lanes identical to `a`, except for lane `i` which has
 the value `x`.
 
+```python
+def S.replaceLane(a, i, x):
+    result = S.New()
+    for j in range(S.Lanes):
+        result[j] = a[j]
+    result[i] = x
+    return result
+```
+
 ### Lane-wise select
 * `v8x16.select(s: b8x16, t: v128, f: v128) -> v128`
 * `v16x8.select(s: b16x8, t: v128, f: v128) -> v128`
@@ -195,13 +328,32 @@ the value `x`.
 
 Create vector with `lane[i] = s[i] ? t[i] : f[i]`.
 
+```python
+def S.select(s, t, f):
+    result = S.New()
+    for i in range(S.Lanes):
+        if s[i]:
+            result[i] = t[i]
+        else
+            result[i] = f[i]
+    return result
+```
+
 ### Swizzle lanes
 * `v8x16.swizzle(a: v128, s: LaneIdx16[16]) -> v128`
 * `v16x8.swizzle(a: v128, s: LaneIdx8[8]) -> v128`
 * `v32x4.swizzle(a: v128, s: LaneIdx4[4]) -> v128`
 * `v64x2.swizzle(a: v128, s: LaneIdx2[2]) -> v128`
 
-Create vector with `lane[i] = a[s[i]]`.
+Create vector with lanes rearranged:
+
+```python
+def S.swizzle(a, s):
+    result = S.New()
+    for i in range(S.Lanes):
+        result[i] = a[s[i]]
+    return result
+```
 
 ### Shuffle lanes
 * `v8x16.shuffle(a: v128, b: v128, s: LaneIdx32[16]) -> v128`
@@ -209,7 +361,18 @@ Create vector with `lane[i] = a[s[i]]`.
 * `v32x4.shuffle(a: v128, b: v128, s: LaneIdx8[4]) -> v128`
 * `v64x2.shuffle(a: v128, b: v128, s: LaneIdx4[2]) -> v128`
 
-Create vector with `lane[i] = s[i] < S.lanes ? a[s[i]] : b[s[i] - S.lanes]`.
+Create vector with lanes selected from two inputs:
+
+```python
+def S.shuffle(a, b, s):
+    result = S.New()
+    for i in range(S.Lanes):
+        if s[i] < S.lanes:
+            result[i] = a[s[i]]
+        else:
+            result[i] = a[s[i] - S.lanes]
+    return result
+```
 
 ## Integer arithmetic
 
@@ -219,7 +382,14 @@ Create vector with `lane[i] = s[i] < S.lanes ? a[s[i]] : b[s[i] - S.lanes]`.
 * `i32x4.add(a: v128, b: v128) -> v128`
 * `i64x2.add(a: v128, b: v128) -> v128`
 
-Lane-wise wrapping integer addition: `lane[i] = S.Reduce(a[i] + b[i])`.
+Lane-wise wrapping integer addition:
+
+```python
+def S.add(a, b):
+    def add(x, y):
+        return S.Reduce(x + y)
+    return S.apply_binary(add, a, b)
+```
 
 ### Integer subtraction
 * `i8x16.sub(a: v128, b: v128) -> v128`
@@ -229,6 +399,13 @@ Lane-wise wrapping integer addition: `lane[i] = S.Reduce(a[i] + b[i])`.
 
 Lane-wise wrapping integer subtraction: `lane[i] = S.Reduce(a[i] - b[i])`.
 
+```python
+def S.sub(a, b):
+    def sub(x, y):
+        return S.Reduce(x - y)
+    return S.apply_binary(sub, a, b)
+```
+
 ### Integer multiplication
 * `i8x16.mul(a: v128, b: v128) -> v128`
 * `i16x8.mul(a: v128, b: v128) -> v128`
@@ -237,19 +414,41 @@ Lane-wise wrapping integer subtraction: `lane[i] = S.Reduce(a[i] - b[i])`.
 
 Lane-wise wrapping integer multiplication: `lane[i] = S.Reduce(a[i] * b[i])`.
 
+```python
+def S.mul(a, b):
+    def mul(x, y):
+        return S.Reduce(x * y)
+    return S.apply_binary(mul, a, b)
+```
+
 ### Integer negation
 * `i8x16.neg(a: v128) -> v128`
 * `i16x8.neg(a: v128) -> v128`
 * `i32x4.neg(a: v128) -> v128`
 * `i64x2.neg(a: v128) -> v128`
 
-Lane-wise wrapping integer negation: `lane[i] = S.Reduce(-a[i])`. In wrapping
-arithmetic, `y = -x` is the unique value such that `x + y == 0`.
+Lane-wise wrapping integer negation. In wrapping arithmetic, `y = -x` is the
+unique value such that `x + y == 0`.
+
+```python
+def S.neg(a):
+    def neg(x, y):
+        return S.Reduce(-x)
+    return S.apply_unary(mul, a)
+```
 
 ## Saturating integer arithmetic
 
 Saturating integer arithmetic behaves differently on signed and unsigned types.
 It is only defined for 8-bit and 16-bit integer lanes.
+```python
+def S.Saturate(x):
+    if x < S.Min:
+        return S.Min
+    if x > S.Max:
+        return S.Max
+    return x
+```
 
 ### Saturating integer addition
 * `s8x16.addSaturate(a: v128, b: v128) -> v128`
@@ -257,7 +456,14 @@ It is only defined for 8-bit and 16-bit integer lanes.
 * `u8x16.addSaturate(a: v128, b: v128) -> v128`
 * `u16x8.addSaturate(a: v128, b: v128) -> v128`
 
-Lane-wise saturating addition: `lane[i] = S.Clamp(a[i] + b[i])`.
+Lane-wise saturating addition:
+
+```python
+def S.addSaturate(a, b):
+    def addsat(x, y):
+        return S.Saturate(x + y)
+    return S.apply_binary(addsat, a, b)
+```
 
 ### Saturating integer subtraction
 * `s8x16.subSaturate(a: v128, b: v128) -> v128`
@@ -265,7 +471,14 @@ Lane-wise saturating addition: `lane[i] = S.Clamp(a[i] + b[i])`.
 * `u8x16.subSaturate(a: v128, b: v128) -> v128`
 * `u16x8.subSaturate(a: v128, b: v128) -> v128`
 
-Lane-wise saturating subtraction: `lane[i] = S.Clamp(a[i] - b[i])`.
+Lane-wise saturating subtraction:
+
+```python
+def S.subSaturate(a, b):
+    def subsat(x, y):
+        return S.Saturate(x + y)
+    return S.apply_binary(subsat, a, b)
+```
 
 ## Bit shifts
 
@@ -464,19 +677,26 @@ These operations are not part of the IEEE 754-2008 standard. Notably, the
 `minNum` and `maxNum` operations defined here behave differently than the IEEE
 `minNum` and `maxNum` operations when one operand is a signaling NaN.
 
+The minimum and maximum value of +0 and -0 is computed as if -0 < +0.
+
 ### NaN-propagating minimum
 * `f32x4.min(a: v128, b: v128) -> v128`
 * `f64x2.min(a: v128, b: v128) -> v128`
 
 Lane-wise minimum value, propagating NaNs:
 ```python
-def min(a, b):
-    if isnan(a) or isnan(b):
-        return propagate_nan(a, b)
-    if a < b:
-        return a
-    else:
-        return b
+def S.min(a, b):
+    def min(x, y):
+        if isnan(x) or isnan(y):
+            return propagate_nan(x, y)
+        # Prefer -0 for min(-0, +0) and min(+0, -0).
+        if x == 0 and y == 0 and signbit(x) != signbit(y):
+            return -0.0
+        if x < y:
+            return x
+        else:
+            return y
+    return S.apply_binary(min, a, b)
 ```
 
 ### NaN-propagating maximum
@@ -485,13 +705,18 @@ def min(a, b):
 
 Lane-wise maximum value, propagating NaNs:
 ```python
-def max(a, b):
-    if isnan(a) or isnan(b):
-        return propagate_nan(a, b)
-    if a > b:
-        return a
-    else:
-        return b
+def S.max(a, b):
+    def max(x, y):
+        if isnan(x) or isnan(y):
+            return propagate_nan(x, y)
+        # Prefer +0 for max(-0, +0) and max(+0, -0).
+        if x == 0 and y == 0 and signbit(x) != signbit(y):
+            return +0.0
+        if x > y:
+            return x
+        else:
+            return y
+    return S.apply_binary(max, a, b)
 ```
 
 ### NaN-suppressing minimum
@@ -500,17 +725,22 @@ def max(a, b):
 
 Lane-wise minimum value, suppressing single NaNs:
 ```python
-def minNum(a, b):
-    if isnan(a) and isnan(b):
-        return propagate_nan(a, b)
-    if isnan(a):
-        return b
-    if isnan(b):
-        return a
-    if a < b:
-        return a
-    else:
-        return b
+def S.minNum(a, b):
+    def minNum(x, y):
+        if isnan(x) and isnan(y):
+            return propagate_nan(x, y)
+        if isnan(x):
+            return y
+        if isnan(y):
+            return x
+        # Prefer -0 for min(-0, +0) and min(+0, -0).
+        if x == 0 and y == 0 and signbit(x) != signbit(y):
+            return -0.0
+        if x < y:
+            return x
+        else:
+            return y
+    return S.apply_binary(minNum, a, b)
 ```
 
 Note that this function behaves differently than the IEEE 754 `minNum` function
@@ -522,17 +752,22 @@ when one of the operands is a signaling NaN.
 
 Lane-wise maximum value, suppressing single NaNs:
 ```python
-def maxNum(a, b):
-    if isnan(a) and isnan(b):
-        return propagate_nan(a, b)
-    if isnan(a):
-        return b
-    if isnan(b):
-        return a
-    if a > b:
-        return a
-    else:
-        return b
+def S.maxNum(a, b):
+    def maxNum(a, b):
+        if isnan(x) and isnan(y):
+            return propagate_nan(x, y)
+        if isnan(x):
+            return y
+        if isnan(y):
+            return x
+        # Prefer +0 for max(-0, +0) and max(+0, -0).
+        if x == 0 and y == 0 and signbit(x) != signbit(y):
+            return +0.0
+        if x > y:
+            return x
+        else:
+            return y
+    return S.apply_binary(maxNum, a, b)
 ```
 
 Note that this function behaves differently than the IEEE 754 `maxNum` function
@@ -585,7 +820,7 @@ def reciprocalApproximation(a):
     if isinf(a):
         # +Inf -> +0.0, -Inf -> -0.0.
         return 1/a
-    return implementation_depedent(a)
+    return implementation_dependent(a)
 ```
 
 ### Reciprocal square root approximation
