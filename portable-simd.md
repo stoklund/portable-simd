@@ -8,7 +8,7 @@ instruction set architectures. It provides shared semantics for
 # Types
 
 The types used in this specification can be concrete or abstract. Concrete types
-have a defined representation as a bit pattern, while abstract types are simple
+have a defined representation as a bit pattern, while abstract types are simply
 a set of allowed values.
 
 ## Scalar types
@@ -22,7 +22,9 @@ unsigned integers.
 * `i64`: A 64-bit integer with bits numbered 0–63.
 
 The concrete scalar floating-point types follow the encoding and semantics of
-the [IEEE 754-2008 standard for floating-point arithmetic][ieee754].
+the [IEEE 754-2008 standard for floating-point arithmetic][ieee754]. See the
+[Floating-point semantics](#floating-point-semantics) section for details and
+exceptions.
 
 * `f32`: A floating-point number in the [IEEE][ieee754] *binary32* interchange
   format.
@@ -50,12 +52,20 @@ representation. The boolean types do not have a bit-pattern representation.
 * `b32x4`: A vector of 4 `boolean` lanes numbered 0–3.
 * `b64x2`: A vector of 2 `boolean` lanes numbered 0–1.
 
-The `v128` type corresponds to a vector register in a typical ISA. The
+The `v128` type corresponds to a vector register in a typical SIMD ISA. The
 interpretation of the 128 bits in the vector register is provided by the
 individual instructions.
 
 The abstract boolean vector types can be mapped to vector registers or predicate
-registers by an implementation.
+registers by an implementation. They have a property `S.Lanes` which is used by
+the pseudo-code below:
+
+|    S    | S.Lanes |
+|---------|--------:|
+| `b8x16` |      16 |
+| `b16x8` |       8 |
+| `b32x4` |       4 |
+| `b64x2` |       2 |
 
 ## Interpreting SIMD types
 
@@ -76,7 +86,16 @@ the bits:
 * `v64x2 : v128`: 64-bit lanes numbered 0–1. Lane n corresponds to bits 64n – 64n+63.
 
 The lane divising interpretations don't say anything about the semantics of the
-bits in each lane.
+bits in each lane. The interpretations have *properties* used by the semantic
+specification pseudo-code below:
+
+|    S    | S.LaneBits | S.Lanes | S.BoolType |
+|---------|-----------:|--------:|:----------:|
+| `v8x16` |          8 |      16 | `b8x16`    |
+| `v16x8` |         16 |       8 | `b16x8`    |
+| `v32x4` |         32 |       4 | `b32x4`    |
+| `v64x2` |         64 |       2 | `b64x2`    |
+
 
 ### Modulo integer interpretations
 
@@ -89,6 +108,15 @@ impose a signed or unsigned integer interpretation.
 * `i32x4 : v32x4`: Each lane is an `i32`.
 * `i64x2 : v64x2`: Each lane is an `i64`.
 
+Additional properties:
+
+|    S    | S.LaneType |
+|---------|------------|
+| `i8x16` |       `i8` |
+| `i16x8` |      `i16` |
+| `i32x4` |      `i32` |
+| `i64x2` |      `i64` |
+
 ### Signed integer interpretations
 
 Each lane is interpreted as a two's complement integer.
@@ -97,6 +125,16 @@ Each lane is interpreted as a two's complement integer.
 * `s16x8 : i16x8`: Lane values in the range -2^15 – 2^15-1.
 * `s32x4 : i32x4`: Lane values in the range -2^31 – 2^31-1.
 * `s64x2 : i64x2`: Lane values in the range -2^63 – 2^63-1.
+
+These interpretations get additional properties defining the range of values in
+a lane:
+
+|    S    | S.Min | S.Max  |
+|---------|------:|-------:|
+| `s8x16` | -2^7  | 2^7-1  |
+| `s16x8` | -2^15 | 2^15-1 |
+| `s32x4` | -2^31 | 2^31-1 |
+| `s64x2` | -2^63 | 2^63-1 |
 
 ### Unsigned integer interpretations
 
@@ -107,12 +145,29 @@ Each lane is interpreted as an unsigned integer.
 * `u32x4 : i32x4`: Lane values in the range 0 – 2^32-1.
 * `u64x2 : i64x2`: Lane values in the range 0 – 2^64-1.
 
+These interpretations get additional properties defining the range of values in
+a lane:
+
+|    S    | S.Min | S.Max  |
+|---------|------:|-------:|
+| `u8x16` |     0 | 2^8-1  |
+| `u16x8` |     0 | 2^16-1 |
+| `u32x4` |     0 | 2^32-1 |
+| `u64x2` |     0 | 2^64-1 |
+
 ### Floating-point interpretations
 
 Each lane is interpreted as an IEEE floating-point number.
 
 * `f32x4 : v32x4`: Each lane is an `f32`.
 * `f64x2 : v64x2`: Each lane is an `f64`.
+
+Additional properties:
+
+|    S    | S.LaneType |
+|---------|------------|
+| `f32x4` | `f32`      |
+| `f64x2` | `f64`      |
 
 # Floating-point semantics
 
@@ -141,16 +196,16 @@ def f32.default_nan():
 
 def f64.default_nan():
     if unspecified_choice():
-        bits = 0x7ff80000_00000000
+        bits = 0x7ff8000000000000
     else:
-        bits = 0xfff80000_00000000
+        bits = 0xfff8000000000000
     return f64.from_bits(bits)
 ```
 
 ## Propagating NaN values
 
 When propagating a NaN value from an operand, all the bits of the NaN are
-preserved, except a signaling NaN is quietened by setting the most significand
+preserved, except a signaling NaN is quieted by setting the most significand
 bit in the trailing significand field.
 
 ```python
@@ -158,11 +213,11 @@ def canonicalize_nan(x):
     assert isnan(x)
     t = type(x)
     assert t == f32 or t == f64
-    bits = x.tobits()
+    bits = x.to_bits()
     if t == f32:
-        bits |= 0x00400000
+        bits |= (1 << 22)
     else:
-        bits |= 0x00080000_00000000
+        bits |= (1 << 51)
     return t.from_bits(bits)
 ```
 
@@ -195,24 +250,18 @@ requires correct subnormal handling.
 
 The SIMD operations described in this sections are generally named
 `S.Op`, where `S` is either a SIMD type or one of the interpretations
-of a SIMD type. The descriptions below refer to the following properties of `S`:
-
-* `S.Lanes`: The number of lanes in the interpretation.
-* `S.LaneBits`: The number of bits in each lane.
-* `S.Reduce(x)`: For the integer interpretations: `x mod 2^S.LaneBits`.
-* `S.Saturate(x)`: For the signed and unsigned integer interpretations, clamp `x`
-  to the allowed value range for a lane.
+of a SIMD type.
 
 Many operations are simply the lanewise application of a scalar operation:
 
 ```python
-def S.apply_unary(func, a):
+def S.lanewise_unary(func, a):
     result = S.New()
     for i in range(S.Lanes):
         result[i] = func(a[i])
     return result
 
-def S.apply_binary(func, a, b):
+def S.lanewise_binary(func, a, b):
     result = S.New()
     for i in range(S.Lanes):
         result[i] = func(a[i], b[i])
@@ -361,7 +410,7 @@ def S.swizzle(a, s):
 * `v32x4.shuffle(a: v128, b: v128, s: LaneIdx8[4]) -> v128`
 * `v64x2.shuffle(a: v128, b: v128, s: LaneIdx4[2]) -> v128`
 
-Create vector with lanes selected from two inputs:
+Create vector with lanes selected from the lanes of two input vectors:
 
 ```python
 def S.shuffle(a, b, s):
@@ -370,11 +419,19 @@ def S.shuffle(a, b, s):
         if s[i] < S.lanes:
             result[i] = a[s[i]]
         else:
-            result[i] = a[s[i] - S.lanes]
+            result[i] = b[s[i] - S.lanes]
     return result
 ```
 
 ## Integer arithmetic
+
+Wrapping integer arithmetic discards the high bits of the result.
+
+```python
+def S.Reduce(x):
+    bitmask = (1 << S.LaneBits) - 1
+    return x & bitmask
+```
 
 ### Integer addition
 * `i8x16.add(a: v128, b: v128) -> v128`
@@ -388,7 +445,7 @@ Lane-wise wrapping integer addition:
 def S.add(a, b):
     def add(x, y):
         return S.Reduce(x + y)
-    return S.apply_binary(add, a, b)
+    return S.lanewise_binary(add, a, b)
 ```
 
 ### Integer subtraction
@@ -397,13 +454,13 @@ def S.add(a, b):
 * `i32x4.sub(a: v128, b: v128) -> v128`
 * `i64x2.sub(a: v128, b: v128) -> v128`
 
-Lane-wise wrapping integer subtraction: `lane[i] = S.Reduce(a[i] - b[i])`.
+Lane-wise wrapping integer subtraction:
 
 ```python
 def S.sub(a, b):
     def sub(x, y):
         return S.Reduce(x - y)
-    return S.apply_binary(sub, a, b)
+    return S.lanewise_binary(sub, a, b)
 ```
 
 ### Integer multiplication
@@ -412,13 +469,13 @@ def S.sub(a, b):
 * `i32x4.mul(a: v128, b: v128) -> v128`
 * `i64x2.mul(a: v128, b: v128) -> v128`
 
-Lane-wise wrapping integer multiplication: `lane[i] = S.Reduce(a[i] * b[i])`.
+Lane-wise wrapping integer multiplication:
 
 ```python
 def S.mul(a, b):
     def mul(x, y):
         return S.Reduce(x * y)
-    return S.apply_binary(mul, a, b)
+    return S.lanewise_binary(mul, a, b)
 ```
 
 ### Integer negation
@@ -432,15 +489,16 @@ unique value such that `x + y == 0`.
 
 ```python
 def S.neg(a):
-    def neg(x, y):
+    def neg(x):
         return S.Reduce(-x)
-    return S.apply_unary(mul, a)
+    return S.lanewise_unary(neg, a)
 ```
 
 ## Saturating integer arithmetic
 
 Saturating integer arithmetic behaves differently on signed and unsigned types.
 It is only defined for 8-bit and 16-bit integer lanes.
+
 ```python
 def S.Saturate(x):
     if x < S.Min:
@@ -462,7 +520,7 @@ Lane-wise saturating addition:
 def S.addSaturate(a, b):
     def addsat(x, y):
         return S.Saturate(x + y)
-    return S.apply_binary(addsat, a, b)
+    return S.lanewise_binary(addsat, a, b)
 ```
 
 ### Saturating integer subtraction
@@ -477,7 +535,7 @@ Lane-wise saturating subtraction:
 def S.subSaturate(a, b):
     def subsat(x, y):
         return S.Saturate(x + y)
-    return S.apply_binary(subsat, a, b)
+    return S.lanewise_binary(subsat, a, b)
 ```
 
 ## Bit shifts
@@ -513,36 +571,70 @@ right shift for the unsigned integer interpretations.
 
 ## Logical operations
 
-The logical operations are defined on the boolean types and the `v128` type
-where they operate on the individual bits.
+The logical operations are defined on the boolean types.
 
 ### Logical and
-* `v128.and(a: v128, b: v128) -> v128`
 * `b8x16.and(a: b8x16, b: b8x16) -> b8x16`
 * `b16x8.and(a: b16x8, b: b16x8) -> b16x8`
 * `b32x4.and(a: b32x4, b: b32x4) -> b32x4`
 * `b64x2.and(a: b64x2, b: b64x2) -> b64x2`
 
+```python
+def S.and(a, b):
+    def logical_and(x, y):
+        return a and b
+    return S.lanewise_binary(logical_and, a, b)
+```
+
 ### Logical or
-* `v128.or(a: v128, b: v128) -> v128`
 * `b8x16.or(a: b8x16, b: b8x16) -> b8x16`
 * `b16x8.or(a: b16x8, b: b16x8) -> b16x8`
 * `b32x4.or(a: b32x4, b: b32x4) -> b32x4`
 * `b64x2.or(a: b64x2, b: b64x2) -> b64x2`
 
+```python
+def S.or(a, b):
+    def logical_or(x, y):
+        return a or b
+    return S.lanewise_binary(logical_or, a, b)
+```
+
 ### Logical xor
-* `v128.xor(a: v128, b: v128) -> v128`
 * `b8x16.xor(a: b8x16, b: b8x16) -> b8x16`
 * `b16x8.xor(a: b16x8, b: b16x8) -> b16x8`
 * `b32x4.xor(a: b32x4, b: b32x4) -> b32x4`
 * `b64x2.xor(a: b64x2, b: b64x2) -> b64x2`
 
+```python
+def S.xor(a, b):
+    def logical_xor(x, y):
+        return a xor b
+    return S.lanewise_binary(logical_xor, a, b)
+```
+
 ### Logical not
-* `v128.not(a: v128) -> v128`
 * `b8x16.not(a: b8x16) -> b8x16`
 * `b16x8.not(a: b16x8) -> b16x8`
 * `b32x4.not(a: b32x4) -> b32x4`
 * `b64x2.not(a: b64x2) -> b64x2`
+
+```python
+def S.not(a):
+    def logical_not(x):
+        return not a
+    return S.lanewise_unary(logical_not, a)
+```
+
+## Bitwise operations
+
+The same logical operations defined on the boolean types are also awailable on
+the `v128` type where they operate bitwise the same way C's `&`, `|`, `^`, and
+`~` operators work on an `unsigned` type.
+
+* `v128.and(a: v128, b: v128) -> v128`
+* `v128.or(a: v128, b: v128) -> v128`
+* `v128.xor(a: v128, b: v128) -> v128`
+* `v128.not(a: v128) -> v128`
 
 ## Boolean reductions
 
@@ -554,6 +646,14 @@ where they operate on the individual bits.
 
 These functions return true if any lane in `a` is true.
 
+```python
+def S.anyTrue(a):
+    for i in range(S.Lanes):
+        if a[i]:
+            return true
+    return false
+```
+
 ### All lanes true
 * `b8x16.allTrue(a: b8x16) -> boolean`
 * `b16x8.allTrue(a: b16x8) -> boolean`
@@ -561,6 +661,14 @@ These functions return true if any lane in `a` is true.
 * `b64x2.allTrue(a: b64x2) -> boolean`
 
 These functions return true if all lanes in `a` are true.
+
+```python
+def S.allTrue(a):
+    for i in range(S.Lanes):
+        if not a[i]:
+            return false
+    return true
+```
 
 ## Comparisons
 
@@ -696,7 +804,7 @@ def S.min(a, b):
             return x
         else:
             return y
-    return S.apply_binary(min, a, b)
+    return S.lanewise_binary(min, a, b)
 ```
 
 ### NaN-propagating maximum
@@ -716,7 +824,7 @@ def S.max(a, b):
             return x
         else:
             return y
-    return S.apply_binary(max, a, b)
+    return S.lanewise_binary(max, a, b)
 ```
 
 ### NaN-suppressing minimum
@@ -740,7 +848,7 @@ def S.minNum(a, b):
             return x
         else:
             return y
-    return S.apply_binary(minNum, a, b)
+    return S.lanewise_binary(minNum, a, b)
 ```
 
 Note that this function behaves differently than the IEEE 754 `minNum` function
@@ -767,7 +875,7 @@ def S.maxNum(a, b):
             return x
         else:
             return y
-    return S.apply_binary(maxNum, a, b)
+    return S.lanewise_binary(maxNum, a, b)
 ```
 
 Note that this function behaves differently than the IEEE 754 `maxNum` function
@@ -775,11 +883,43 @@ when one of the operands is a signaling NaN.
 
 ## Floating-point arithmetic
 
+The floating-point arithmetic operations handle NaNs more strictly specified
+than the IEEE standard:
+
+```python
+def wrap_fp_unary(func):
+    def wrapped(x):
+        if isnan(x):
+            return canonicalize_nan(x)
+        result = func(x)
+        if isnan(result):
+            return type(result).default_nan()
+        else:
+            return result
+    return wrapped
+
+def wrap_fp_binary(func):
+    def wrapped(x, y):
+        if isnan(x) or isnan(y):
+            return propagate_nan(x, y)
+        result = func(x, y)
+        if isnan(result):
+            return type(result).default_nan()
+        else:
+            return result
+    return wrapped
+```
+
 ### Addition
 * `f32x4.add(a: v128, b: v128) -> v128`
 * `f64x2.add(a: v128, b: v128) -> v128`
 
 Lane-wise IEEE `addition`.
+
+```python
+def S.add(a, b):
+    return S.lanewise_binary(wrap_fp_binary(ieee.addition), a, b)
+```
 
 ### Subtraction
 * `f32x4.sub(a: v128, b: v128) -> v128`
@@ -787,11 +927,21 @@ Lane-wise IEEE `addition`.
 
 Lane-wise IEEE `subtraction`.
 
+```python
+def S.sub(a, b):
+    return S.lanewise_binary(wrap_fp_binary(ieee.subtraction), a, b)
+```
+
 ### Division
 * `f32x4.div(a: v128, b: v128) -> v128`
 * `f64x2.div(a: v128, b: v128) -> v128`
 
 Lane-wise IEEE `division`.
+
+```python
+def S.div(a, b):
+    return S.lanewise_binary(wrap_fp_binary(ieee.division), a, b)
+```
 
 ### Multiplication
 * `f32x4.mul(a: v128, b: v128) -> v128`
@@ -799,28 +949,42 @@ Lane-wise IEEE `division`.
 
 Lane-wise IEEE `multiplication`.
 
+```python
+def S.mul(a, b):
+    return S.lanewise_binary(wrap_fp_binary(ieee.multiplication), a, b)
+```
+
 ### Square root
 * `f32x4.sqrt(a: v128) -> v128`
 * `f64x2.sqrt(a: v128) -> v128`
 
 Lane-wise IEEE `squareRoot`.
 
+```python
+def S.sqrt(a):
+    return S.lanewise_unary(wrap_fp_unary(ieee.squareRoot), a)
+```
+
 ### Reciprocal approximation
 * `f32x4.reciprocalApproximation(a: v128) -> v128`
 * `f64x2.reciprocalApproximation(a: v128) -> v128`
 
 Implementation-dependent approximation to the reciprocal.
+
 ```python
-def reciprocalApproximation(a):
-    if isnan(a):
-        return propagate_nan(a)
-    if a == 0.0:
-        # +0.0 -> +Inf, -0.0 -> -Inf.
-        return 1/a
-    if isinf(a):
-        # +Inf -> +0.0, -Inf -> -0.0.
-        return 1/a
-    return implementation_dependent(a)
+def S.reciprocalApproximation(a):
+    def recipApprx(x):
+        if isnan(x):
+            return canonicalize_nan(x)
+        if x == 0.0:
+            # +0.0 -> +Inf, -0.0 -> -Inf.
+            return 1/x
+        if isinf(x):
+            # +Inf -> +0.0, -Inf -> -0.0.
+            return 1/x
+        # The exact nature of the approximation is unspecified.
+        return implementation_dependent(x)
+    return S.lanewise_unary(recipApprx, a)
 ```
 
 ### Reciprocal square root approximation
@@ -828,17 +992,21 @@ def reciprocalApproximation(a):
 * `f64x2.reciprocalSqrtApproximation(a: v128) -> v128`
 
 Implementation-dependent approximation to the reciprocal of the square root.
+
 ```python
-def reciprocalSqrtApproximation(a):
-    if isnan(a):
-        return propagate_nan(a)
-    if a == 0:
-        # +0.0 -> +Inf, -0.0 -> -Inf.
-        return 1/a
-    if isinf(a):
-        # +Inf -> +0.0, -Inf -> -0.0.
-        return 1/a
-    return implementation_depedent(a)
+def S.reciprocalSqrtApproximation(a):
+    def recipSqrtApprx(x):
+        if isnan(x):
+            return canonicalize_nan(x)
+        if x == 0:
+            # +0.0 -> +Inf, -0.0 -> -Inf.
+            return 1/x
+        if isinf(x):
+            # +Inf -> +0.0, -Inf -> -0.0.
+            return 1/x
+        # The exact nature of the approximation is unspecified.
+        return implementation_dependent(x)
+    return S.lanewise_unary(recipSqrtApprx, a)
 ```
 
 ## Conversions
