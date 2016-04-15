@@ -174,15 +174,11 @@ Additional properties:
 The floating-point operations in this specification aim to be conforming to
 [IEEE 754-2008][ieee754] while being compatible with WebAssembly and JavaScript.
 Some things which are left unspecified by the IEEE standard are given stricter
-semantics by WebAssembly, such as:
-
-* Default NaN bit patterns.
-* NaN propagation rules.
-* The sign of 0 returned by min/max operations.
+semantics by WebAssembly.
 
 ## Default NaN value
 
-When a floating-point operation needs to return a NaN, and none of its operands
+When a floating-point operation needs to return a NaN and none of its operands
 are NaN, it generates a default NaN value which is a quiet NaN with an all-zero
 payload field. The sign of the default NaN is not specified:
 
@@ -221,7 +217,7 @@ def canonicalize_nan(x):
     return t.from_bits(bits)
 ```
 
-When two operands are NaN one of them is propagated. Which one is not specified:
+When two operands are NaN, one of them is propagated. Which one is not specified:
 
 ```python
 def propagate_nan(x, y):
@@ -244,7 +240,7 @@ operations. This means that any subnormal operand is treated as 0, and any
 subnormal result is rounded to 0.
 
 Not that this differs from WebAssembly scalar floating-point semantics which
-requires correct subnormal handling.
+require correct subnormal handling.
 
 # Operations
 
@@ -375,7 +371,7 @@ def S.replaceLane(a, i, x):
 * `v32x4.select(s: b32x4, t: v128, f: v128) -> v128`
 * `v64x2.select(s: b64x2, t: v128, f: v128) -> v128`
 
-Create vector with `lane[i] = s[i] ? t[i] : f[i]`.
+Use a boolean vector to select lanes from two numerical vectors.
 
 ```python
 def S.select(s, t, f):
@@ -534,7 +530,7 @@ Lane-wise saturating subtraction:
 ```python
 def S.subSaturate(a, b):
     def subsat(x, y):
-        return S.Saturate(x + y)
+        return S.Saturate(x - y)
     return S.lanewise_binary(subsat, a, b)
 ```
 
@@ -571,7 +567,8 @@ right shift for the unsigned integer interpretations.
 
 ## Logical operations
 
-The logical operations are defined on the boolean types.
+The logical operations are defined on the boolean SIMD types. See also the
+[Bitwise operations](#bitwise-operations) below.
 
 ### Logical and
 * `b8x16.and(a: b8x16, b: b8x16) -> b8x16`
@@ -582,7 +579,7 @@ The logical operations are defined on the boolean types.
 ```python
 def S.and(a, b):
     def logical_and(x, y):
-        return a and b
+        return x and y
     return S.lanewise_binary(logical_and, a, b)
 ```
 
@@ -595,7 +592,7 @@ def S.and(a, b):
 ```python
 def S.or(a, b):
     def logical_or(x, y):
-        return a or b
+        return x or y
     return S.lanewise_binary(logical_or, a, b)
 ```
 
@@ -608,7 +605,7 @@ def S.or(a, b):
 ```python
 def S.xor(a, b):
     def logical_xor(x, y):
-        return a xor b
+        return x xor y
     return S.lanewise_binary(logical_xor, a, b)
 ```
 
@@ -621,7 +618,7 @@ def S.xor(a, b):
 ```python
 def S.not(a):
     def logical_not(x):
-        return not a
+        return not x
     return S.lanewise_unary(logical_not, a)
 ```
 
@@ -636,7 +633,10 @@ the `v128` type where they operate bitwise the same way C's `&`, `|`, `^`, and
 * `v128.xor(a: v128, b: v128) -> v128`
 * `v128.not(a: v128) -> v128`
 
-## Boolean reductions
+## Boolean horizontal reductions
+
+These operations reduce all the lanes of a boolean vector to a single scalar
+boolean value.
 
 ### Any lane true
 * `b8x16.anyTrue(a: b8x16) -> boolean`
@@ -758,6 +758,8 @@ Semantics: `lane[i] = (a[i] >= b[i])`.
 
 
 ## Load and store
+
+TBD.
 
 ## Floating-point sign bit operations
 
@@ -973,7 +975,7 @@ Implementation-dependent approximation to the reciprocal.
 
 ```python
 def S.reciprocalApproximation(a):
-    def recipApprx(x):
+    def recip_approx(x):
         if isnan(x):
             return canonicalize_nan(x)
         if x == 0.0:
@@ -984,7 +986,7 @@ def S.reciprocalApproximation(a):
             return 1/x
         # The exact nature of the approximation is unspecified.
         return implementation_dependent(x)
-    return S.lanewise_unary(recipApprx, a)
+    return S.lanewise_unary(recip_approx, a)
 ```
 
 ### Reciprocal square root approximation
@@ -995,7 +997,7 @@ Implementation-dependent approximation to the reciprocal of the square root.
 
 ```python
 def S.reciprocalSqrtApproximation(a):
-    def recipSqrtApprx(x):
+    def recip_sqrt_approx(x):
         if isnan(x):
             return canonicalize_nan(x)
         if x == 0:
@@ -1006,7 +1008,7 @@ def S.reciprocalSqrtApproximation(a):
             return 1/x
         # The exact nature of the approximation is unspecified.
         return implementation_dependent(x)
-    return S.lanewise_unary(recipSqrtApprx, a)
+    return S.lanewise_unary(recip_sqrt_approx, a)
 ```
 
 ## Conversions
