@@ -804,15 +804,25 @@ inputs.
 * `f32x4.neg(a: v128) -> v128`
 * `f64x2.neg(a: v128) -> v128`
 
-Apply the IEEE `negate(x)` function to each lane: `lane[i] = -a[i]`. This simply
-inverts the sign bit, preserving all other bits.
+Apply the IEEE `negate(x)` function to each lane. This simply inverts the sign
+bit, preserving all other bits.
+
+```python
+def S.neg(a):
+    return S.lanewise_unary(ieee.negate, a)
+```
 
 ### Absolute value
-* `f32x4.neg(a: v128) -> v128`
-* `f64x2.neg(a: v128) -> v128`
+* `f32x4.abs(a: v128) -> v128`
+* `f64x2.abs(a: v128) -> v128`
 
-Apply the IEEE `abs(x)` function to each lane: `lane[i] = IEEE.abs(a[i])`. This
-simply clears the sign bit, preserving all other bits.
+Apply the IEEE `abs(x)` function to each lane. This simply clears the sign bit,
+preserving all other bits.
+
+```python
+def S.abs(a):
+    return S.lanewise_unary(ieee.abs, a)
+```
 
 ## Floating-point min and max
 
