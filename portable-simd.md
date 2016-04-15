@@ -537,33 +537,45 @@ def S.subSaturate(a, b):
 ## Bit shifts
 
 ### Left shift by scalar
-* `i8x16.shiftLeftByScalar(a: v128, b: i8) -> v128`
-* `i16x8.shiftLeftByScalar(a: v128, b: i8) -> v128`
-* `i32x4.shiftLeftByScalar(a: v128, b: i8) -> v128`
-* `i64x2.shiftLeftByScalar(a: v128, b: i8) -> v128`
+* `i8x16.shiftLeftByScalar(a: v128, y: i8) -> v128`
+* `i16x8.shiftLeftByScalar(a: v128, y: i8) -> v128`
+* `i32x4.shiftLeftByScalar(a: v128, y: i8) -> v128`
+* `i64x2.shiftLeftByScalar(a: v128, y: i8) -> v128`
 
 Shift the bits in each lane to the left by the same amount. Only the low bits of
 the shift amount are used:
 
-    bits = b mod S.LaneBits
-    lane[i] = S.Reduce(a[i] * 2^bits)
+```python
+def S.shiftLeftByScalar(a, x):
+    # Number of bits to shift: 0 .. S.LaneBits - 1.
+    amount = y mod S.LaneBits
+    def shift(x):
+        return S.Reduce(x << amount)
+    return S.lanewise_unary(shift, a)
+```
 
 ### Right shift by scalar
-* `s8x16.shiftRightByScalar(a: v128, b: i8) -> v128`
-* `s16x8.shiftRightByScalar(a: v128, b: i8) -> v128`
-* `s32x4.shiftRightByScalar(a: v128, b: i8) -> v128`
-* `s64x2.shiftRightByScalar(a: v128, b: i8) -> v128`
-* `u8x16.shiftRightByScalar(a: v128, b: i8) -> v128`
-* `u16x8.shiftRightByScalar(a: v128, b: i8) -> v128`
-* `u32x4.shiftRightByScalar(a: v128, b: i8) -> v128`
-* `u64x2.shiftRightByScalar(a: v128, b: i8) -> v128`
+* `s8x16.shiftRightByScalar(a: v128, y: i8) -> v128`
+* `s16x8.shiftRightByScalar(a: v128, y: i8) -> v128`
+* `s32x4.shiftRightByScalar(a: v128, y: i8) -> v128`
+* `s64x2.shiftRightByScalar(a: v128, y: i8) -> v128`
+* `u8x16.shiftRightByScalar(a: v128, y: i8) -> v128`
+* `u16x8.shiftRightByScalar(a: v128, y: i8) -> v128`
+* `u32x4.shiftRightByScalar(a: v128, y: i8) -> v128`
+* `u64x2.shiftRightByScalar(a: v128, y: i8) -> v128`
 
 Shift the bits in each lane to the right by the same amount. This is an
 arithmetic right shift for the signed integer interpretations and a logical
 right shift for the unsigned integer interpretations.
 
-    bits = b mod S.LaneBits
-    lane[i] = truncate_toward_negative(a[i] / 2^bits)
+```python
+def S.shiftRightByScalar(a, y):
+    # Number of bits to shift: 0 .. S.LaneBits - 1.
+    amount = y mod S.LaneBits
+    def shift(x):
+        return x >> amount
+    return S.lanewise_unary(shift, a)
+```
 
 ## Logical operations
 
