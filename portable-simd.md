@@ -1076,6 +1076,11 @@ def S.reciprocalSqrtApproximation(a):
 Lane-wise conversion from integer to floating point. Some integer values will be
 rounded.
 
+```python
+def S.fromXXX(a):
+    return S.lanewise_unary(S.LaneType.convertFromInt, a)
+```
+
 ### Floating point to integer
 * `s32x4.fromFloat32x4(a: v128) -> (result: v128, fail: boolean)`
 * `s64x2.fromFloat64x2(a: v128) -> (result: v128, fail: boolean)`
@@ -1087,6 +1092,23 @@ Lane-wise conversion from floating point to integer usine the IEEE
 integer value is outside the range of the destination type, return `fail = true`
 and an unspecified `result`.
 
+```python
+def S.fromFloatXXX(a):
+    result = S.New()
+    fail = false
+    for i in range(S.Lanes):
+        r = ieee.roundToIntegralTowardZero(a[i])
+        if isnan(r):
+            fail = true
+        elif S.Min <= r and r <= S.Max:
+            result[i] = r
+        else:
+            fail = true
+    if fail:
+       return (unspecified(), true)
+    else
+       return (result, false)
+```
 
 [wasm]: https://webassembly.github.io/ (WebAssembly)
 [simdjs]: http://tc39.github.io/ecmascript_simd/ (SIMD.js specification)
