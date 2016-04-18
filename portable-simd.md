@@ -41,8 +41,8 @@ pattern:
 * `LaneIdx16`: An integer in the range 0–15 identifying a lane.
 * `LaneIdx32`: An integer in the range 0–31 identifying a lane.
 * `RoundingMode`: Rounding mode for floating-point operations. One of
-  `TiesToEven`, `TiesAway`, `TowardPositive`, `TowardNegative`, `TowardZero`,
-  and `Dynamic`. See [Rounding modes](#rounding-modes).
+  `TiesToEven`, `TowardPositive`, `TowardNegative`, and `TowardZero`. See
+  [Rounding modes](#rounding-modes).
 
 ## SIMD types
 
@@ -182,20 +182,12 @@ semantics by WebAssembly.
 ## Rounding modes
 
 Floating-point operations that need a *rounding mode* take a `RoundingMode`
-operand which can provide the rounding mode to use for the operation statically,
-or specify that the rounding mode configured in the dynamic floating-point
-environment should be used.
+operand which provides the rounding mode to use for the operation.
 
 * `TiesToEven`: Round to nearest, ties towards even.
-* `TiesAway`: Round to nearest, ties away from zero.
 * `TowardPositive`: Round towards positive infinity.
 * `TowardNegative`: Round towards negative infinity.
 * `TowardZero`: Round towards zero.
-* `Dynamic`: Use the dynamically configured rounding mode in the floating-point
-  environment.
-
-Nothing is specified about configuring the floating-point environment in this
-document.
 
 ## Default NaN value
 
