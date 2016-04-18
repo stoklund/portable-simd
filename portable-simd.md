@@ -830,7 +830,7 @@ TBD.
 ## Floating-point sign bit operations
 
 These floating point operations are simple manipulations of the sign bit. No
-changes are made to the exponent or trailing bignificand bits, even for NaN
+changes are made to the exponent or trailing significand bits, even for NaN
 inputs.
 
 ### Negation
@@ -1110,7 +1110,7 @@ def S.fromXXX(a, rmode):
 * `u32x4.fromFloat32x4(a: v128) -> (result: v128, fail: boolean)`
 * `u64x2.fromFloat64x2(a: v128) -> (result: v128, fail: boolean)`
 
-Lane-wise conversion from floating point to integer usine the IEEE
+Lane-wise conversion from floating point to integer using the IEEE
 `convertToIntegerTowardZero` function. If any lane is a NaN or the rounded
 integer value is outside the range of the destination type, return `fail = true`
 and an unspecified `result`.
