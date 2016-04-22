@@ -1,1 +1,2 @@
-portable-simd.html
+*.html
+*.pyc
