@@ -9,6 +9,7 @@ class Interpretation(object):
     def __init__(self, name):
         self.name = name
         self.parent = None
+        self.children = list()
         # Operations defined directly on this interpretation.
         self.operations = list()
 
@@ -89,6 +90,7 @@ class Specification(object):
             pname = m.group(3)
             if pname:
                 interp.parent = self.interpretations_byname[pname]
+                interp.parent.children.append(interp)
             self.add_interpretation(interp)
 
     def extract_operations(self, text):

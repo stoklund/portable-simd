@@ -13,16 +13,16 @@ print('''
 
 This table is generated automatically from [the
 specification](portable-simd.md). For each SIMD type or interpretation, the
-table indicates:
+table indicates a **Y** when the operation has a definition specialized to this
+interpretation.
 
-* **Y** The operation has a definition specialized to this interpretation.
-* **I** The operation has a definition for this interpretation that has been
-inherited from a less specific interpretation. (e.g., `u32x4.add()` is inherited
-from `i32x4.add()`).
+When an operation is inherited from a less specific interpretation, that
+interpretation is listed.
 
 ''')
 
-simd = [it for it in spec.interpretations if len(it.operations) > 0]
+simd = [it for it in spec.interpretations if len(it.operations) > 0 and
+        len(it.children) == 0]
 maxoname = max(len(op.name) for op in spec.operations)
 maxiname = max(len(it.name) for it in simd)
 
@@ -38,6 +38,6 @@ for op in spec.operations:
         if d is interp:
             line.append('Y')
         else:
-            line.append('I' if d else '')
+            line.append(d.name if d else '')
     print('| {} | {} |'.format(op.name.ljust(maxoname),
         ' | '.join(s.center(maxiname) for s in line)))
