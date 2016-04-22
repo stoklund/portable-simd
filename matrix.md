@@ -48,9 +48,6 @@ interpretation is listed.
 | sqrt                        |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |   Y   |
 | reciprocalApproximation     |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |   Y   |
 | reciprocalSqrtApproximation |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |   Y   |
-| fromInt32x4                 |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |       |
-| fromInt64x2                 |       |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |
-| fromUint32x4                |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |       |
-| fromUint64x2                |       |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |
-| fromFloat32x4               |       |       |       |       |       |       |   Y   |       |       |       |   Y   |       |       |       |
-| fromFloat64x2               |       |       |       |       |       |       |       |   Y   |       |       |       |   Y   |       |       |
+| fromSignedInt               |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |   Y   |
+| fromUnsignedInt             |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |   Y   |
+| fromFloat                   |       |       |       |       |       |       |   Y   |   Y   |       |       |   Y   |   Y   |       |       |

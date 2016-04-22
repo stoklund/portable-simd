@@ -1081,26 +1081,31 @@ def S.reciprocalSqrtApproximation(a):
 
 ## Conversions
 ### Integer to floating point
-* `f32x4.fromInt32x4(a: v128, rmode: RoundingMode) -> v128`
-* `f64x2.fromInt64x2(a: v128, rmode: RoundingMode) -> v128`
-* `f32x4.fromUint32x4(a: v128, rmode: RoundingMode) -> v128`
-* `f64x2.fromUint64x2(a: v128, rmode: RoundingMode) -> v128`
+* `f32x4.fromSignedInt(a: v128, rmode: RoundingMode) -> v128`
+* `f64x2.fromSignedInt(a: v128, rmode: RoundingMode) -> v128`
+* `f32x4.fromUnsignedInt(a: v128, rmode: RoundingMode) -> v128`
+* `f64x2.fromUnsignedInt(a: v128, rmode: RoundingMode) -> v128`
 
 Lane-wise conversion from integer to floating point. Some integer values will be
 rounded.
 
 ```python
-def S.fromXXX(a, rmode):
+def S.fromSignedInt(a, rmode):
+    def convert(x):
+        return S.LaneType.convertFromInt(x, rmode)
+    return S.lanewise_unary(convert, a)
+
+def S.fromUnsignedInt(a, rmode):
     def convert(x):
         return S.LaneType.convertFromInt(x, rmode)
     return S.lanewise_unary(convert, a)
 ```
 
 ### Floating point to integer
-* `s32x4.fromFloat32x4(a: v128) -> (result: v128, fail: boolean)`
-* `s64x2.fromFloat64x2(a: v128) -> (result: v128, fail: boolean)`
-* `u32x4.fromFloat32x4(a: v128) -> (result: v128, fail: boolean)`
-* `u64x2.fromFloat64x2(a: v128) -> (result: v128, fail: boolean)`
+* `s32x4.fromFloat(a: v128) -> (result: v128, fail: boolean)`
+* `s64x2.fromFloat(a: v128) -> (result: v128, fail: boolean)`
+* `u32x4.fromFloat(a: v128) -> (result: v128, fail: boolean)`
+* `u64x2.fromFloat(a: v128) -> (result: v128, fail: boolean)`
 
 Lane-wise conversion from floating point to integer using the IEEE
 `convertToIntegerTowardZero` function. If any lane is a NaN or the rounded
@@ -1108,7 +1113,7 @@ integer value is outside the range of the destination type, return `fail = true`
 and an unspecified `result`.
 
 ```python
-def S.fromFloatXXX(a):
+def S.fromFloat(a):
     result = S.New()
     fail = false
     for i in range(S.Lanes):
