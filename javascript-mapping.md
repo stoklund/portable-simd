@@ -127,6 +127,30 @@ range over all integer and floating-point SIMD types. These types all have a
 2. Let `res` be `a.[[SIMDElements]]`.
 3. Return `SIMDCreate(«SIMD»Descriptor, res)`.
 
+### «SIMD»Constructor.from«TIMD»(a)
+
+Conversion between floating-point and integer lanes is provided for the 32x4
+integer types:
+
+| `«SIMD»`    | `«TIMD»`    | `«Operation»`           | Fallible |
+|-------------|-------------|-------------------------|----------|
+| `Float32x4` | `Int32x4`   | `f32x4.fromSignedInt`   | No       |
+| `Float32x4` | `Uint32x4`  | `f32x4.fromUnsignedInt` | No       |
+| `Int32x4`   | `Float32x4` | `s32x4.fromFloat`       | Yes      |
+| `Uint32x4`  | `Float32x4` | `u32x4.fromFloat`       | Yes      |
+
+The integer-to-float conversions always succeed, but the float-to-integer
+conversions can fail:
+
+1. If `a.[[SIMDTypeDescriptor]]` is not `«TIMD»Descriptor`, throw a TypeError exception.
+2. If conversion is fallible:
+    1. Let `(res, fail)` be `«Operation»(a.[[SIMDElements]])`.
+3. Otherwise:
+    1. Let `res` be `«Operation»(a.[[SIMDElements]])`.
+    2. Let `fail` be false.
+4. If `fail` is true, throw a RangeError exception.
+5. Return `SIMDCreate(«SIMD»Descriptor, res)`.
+
 ### «SIMD»Constructor.anyTrue(a)
 
 This operation is only defined on boolean SIMD types.
