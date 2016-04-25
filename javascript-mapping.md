@@ -26,6 +26,12 @@ SIMD.js does not currently provide mappings for any of the 64x2 types.
 
 1. Return the SIMD value specified by the record { [[SIMDTypeDescriptor]]: descriptor, [[SIMDElements]]: elements }.
 
+### SIMDUnaryOp(a, op, descriptor)
+
+1. If `a.[[SIMDTypeDescriptor]]` is not `descriptor`, throw a TypeError exception.
+2. Let `res` be `descriptor.[[Interpretation]].op(a.[[SIMDElements]])`.
+3. Return `SIMDCreate(descriptor, res)`.
+
 ### SIMDBinaryOp(a, b, op, descriptor, outputDescriptor)
 
 1. If `a.[[SIMDTypeDescriptor]]` is not `descriptor` or `b.[[SIMDTypeDescriptor]]` is not `descriptor`, throw a TypeError exception.
@@ -47,21 +53,69 @@ SIMD.js does not currently provide mappings for any of the 64x2 types.
 
 ## Properties of the SIMDConstructor constructors
 
-### «SIMD»Constructor.add(a, b)
+### Unary operations
 
-This operation is only defined on integer and floating point SIMD types.
+The unary operations listed in the table below are defined as properties
+`«SIMD»Constructor.«Operation»(a)` where `«SIMD»` is one of the SIMD types and
+`«Operation»` is the name of the operation.
 
-1. Let `result` be `SIMDBinaryOp(a, b, add, «SIMD»Descriptor)`.
+1. Let `result` be `SIMDUnaryOp(a, «Operation», «SIMD»Descriptor)`.
 2. ReturnIfAbrupt(`result`).
 3. Return `result`.
 
-### «SIMD»Constructor.lessThan(a, b)
+| `«Operation»`               | SIMD types supported       |
+|-----------------------------|----------------------------|
+| neg                         | integer and floating-point |
+| sqrt                        | floating-point             |
+| reciprocalSqrtApproximation | floating-point             |
+| reciprocalApproximation     | floating-point             |
+| abs                         | floating-point             |
+| not                         | integer and boolean        |
 
-This operation is only defined on integer and floating point SIMD types.
+### Binary operations
 
-1. Let `result` be `SIMDRelationalOp(a, b, lessThan, «SIMD»Descriptor)`.
+The unary operations listed in the table below are defined as properties
+`«SIMD»Constructor.«Operation»(a, b)` where `«SIMD»` is one of the SIMD types and
+`«Operation»` is the name of the operation.
+
+1. Let `result` be `SIMDBinaryOp(a, b, «Operation», «SIMD»Descriptor)`.
 2. ReturnIfAbrupt(`result`).
 3. Return `result`.
+
+| `«Operation»`               | SIMD types supported       |
+|-----------------------------|----------------------------|
+| add                         | integer and floating-point |
+| sub                         | integer and floating-point |
+| mul                         | integer and floating-point |
+| div                         | floating-point             |
+| max                         | floating-point             |
+| min                         | floating-point             |
+| maxNum                      | floating-point             |
+| minNum                      | floating-point             |
+| and                         | integer and boolean        |
+| xor                         | integer and boolean        |
+| or                          | integer and boolean        |
+| addSaturate                 | 8x16 and 16x8 integers     |
+| subSaturate                 | 8x16 and 16x8 integers     |
+
+### Relational operations
+
+The relational operations listed in the table below are defined as properties
+`«SIMD»Constructor.«Operation»(a, b)` where `«SIMD»` is one of the SIMD types
+and `«Operation»` is the name of the operation.
+
+1. Let `result` be `SIMDRelationalOp(a, b, «Operation», «SIMD»Descriptor)`.
+2. ReturnIfAbrupt(`result`).
+3. Return `result`.
+
+| `«Operation»`               | SIMD types supported       |
+|-----------------------------|----------------------------|
+| lessThan                    | integer and floating-point |
+| lessThanOrEqual             | integer and floating-point |
+| greaterThan                 | integer and floating-point |
+| greaterThanOrEqual          | integer and floating-point |
+| equal                       | integer and floating-point |
+| notEqual                    | integer and floating-point |
 
 ### «SIMD»Constructor.anyTrue(a)
 
