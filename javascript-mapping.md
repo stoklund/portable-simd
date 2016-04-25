@@ -117,6 +117,16 @@ and `«Operation»` is the name of the operation.
 | equal                       | integer and floating-point |
 | notEqual                    | integer and floating-point |
 
+### «SIMD»Constructor.from«TIMD»Bits(a)
+
+In this definition, `«TIMD»` is not `«SIMD»`, and both `«TIMD»` and `«SIMD»`
+range over all integer and floating-point SIMD types. These types all have a
+`v128` `[[SIMDElements]]` field which is simply reinterpreted as the new type.
+
+1. If `a.[[SIMDTypeDescriptor]]` is not `«TIMD»Descriptor`, throw a TypeError exception.
+2. Let `res` be `a.[[SIMDElements]]`.
+3. Return `SIMDCreate(«SIMD»Descriptor, res)`.
+
 ### «SIMD»Constructor.anyTrue(a)
 
 This operation is only defined on boolean SIMD types.
