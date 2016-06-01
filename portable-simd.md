@@ -88,7 +88,7 @@ the bits:
 * `v32x4 : v128`: 32-bit lanes numbered 0–3. Lane n corresponds to bits 32n – 32n+31.
 * `v64x2 : v128`: 64-bit lanes numbered 0–1. Lane n corresponds to bits 64n – 64n+63.
 
-The lane divising interpretations don't say anything about the semantics of the
+The lane dividing interpretations don't say anything about the semantics of the
 bits in each lane. The interpretations have *properties* used by the semantic
 specification pseudo-code below:
 
@@ -1128,6 +1128,114 @@ def S.fromFloat(a):
        return (unspecified(), true)
     else
        return (result, false)
+```
+
+## Memory operations
+
+Load and store operations are provided for `v128` vectors, but not for the
+boolean vectors; we don't want to impose a bitwise representation of the boolean
+vectors.
+
+The memory operations work on an abstract `Buffer` instance which can be
+addressed by a `ByteOffset` type. Unaligned memory operations are allowed, but
+they may be slower than aligned operations.
+
+This specification does not address bounds checking and trap handling for memory
+operations. It is assumed that the range `addr .. addr+15` are valid offsets in
+the buffer, and that computing `addr+15` does not overflow the `ByteOffset`
+type. Bounds checking should be handled by the embedding specification.
+
+### Load
+
+* `v8x16.load(mem: Buffer, addr: ByteOffset) -> v128`
+* `v16x8.load(mem: Buffer, addr: ByteOffset) -> v128`
+* `v32x4.load(mem: Buffer, addr: ByteOffset) -> v128`
+* `v64x2.load(mem: Buffer, addr: ByteOffset) -> v128`
+
+Load a `v128` vector from the given buffer and offset.
+
+```python
+def S.load(mem, addr):
+    assert mem.in_range(addr, 16)
+    result = S.New()
+    lane_bytes = S.LaneBits / 8
+    for i in range(S.Lanes):
+        result[i] = mem.load(S.LaneBits, addr + i * lane_bytes)
+    return result
+```
+
+### Store
+
+* `v8x16.store(mem: Buffer, addr: ByteOffset, data: v128)`
+* `v16x8.store(mem: Buffer, addr: ByteOffset, data: v128)`
+* `v32x4.store(mem: Buffer, addr: ByteOffset, data: v128)`
+* `v64x2.store(mem: Buffer, addr: ByteOffset, data: v128)`
+
+Store a `v128` vector to the given buffer and offset.
+
+```python
+def S.store(mem, addr, data):
+    assert mem.in_range(addr, 16)
+    lane_bytes = S.LaneBits / 8
+    for i in range(S.Lanes):
+        mem.store(S.LaneBits, addr + i * lane_bytes, data[i])
+```
+
+### Partial load
+
+* `v32x4.load1(mem: Buffer, addr: ByteOffset) -> v128`
+* `v32x4.load2(mem: Buffer, addr: ByteOffset) -> v128`
+* `v32x4.load3(mem: Buffer, addr: ByteOffset) -> v128`
+
+These functions load the first 1, 2, or 3 lanes from a buffer and sets the
+remaining lanes to all zeroes. The partial loads are only defined for 4-lane
+interpretations.
+
+```python
+def partial_load(mem, addr, lanes):
+    result = v32x4.splat(0)
+    for i in range(lanes):
+        result[i] = mem.load(32, addr + i * 4)
+    return result
+
+def v32x4.load1(mem, addr):
+    assert mem.in_range(addr, 4)
+    return partial_load(mem, addr, 1)
+
+def v32x4.load2(mem, addr):
+    assert mem.in_range(addr, 8)
+    return partial_load(mem, addr, 2)
+
+def v32x4.load3(mem, addr):
+    assert mem.in_range(addr, 12)
+    return partial_load(mem, addr, 3)
+```
+
+### Partial store
+
+* `v32x4.store1(mem: Buffer, addr: ByteOffset, data: v128)`
+* `v32x4.store2(mem: Buffer, addr: ByteOffset, data: v128)`
+* `v32x4.store3(mem: Buffer, addr: ByteOffset, data: v128)`
+
+These functions store the first 1, 2, or 3 lanes to a buffer. They are only
+defined for the 4-lane interpretations.
+
+```python
+def partial_store(mem, addr, data, lanes):
+    for i in range(lanes):
+        mem.store(32, addr + i * 4, data[i])
+
+def v32x4.store1(mem, addr, data):
+    assert mem.in_range(addr, 4)
+    partial_store(mem, addr, data, 1)
+
+def v32x4.store2(mem, addr, data):
+    assert mem.in_range(addr, 8)
+    partial_store(mem, addr, data, 2)
+
+def v32x4.store3(mem, addr, data):
+    assert mem.in_range(addr, 12)
+    partial_store(mem, addr, data, 3)
 ```
 
 [wasm]: https://webassembly.github.io/ (WebAssembly)

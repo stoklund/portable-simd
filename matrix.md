@@ -51,3 +51,11 @@ interpretation is listed.
 | fromSignedInt               |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |   Y   |
 | fromUnsignedInt             |       |       |       |       |       |       |       |       |       |       |       |       |   Y   |   Y   |
 | fromFloat                   |       |       |       |       |       |       |   Y   |   Y   |       |       |   Y   |   Y   |       |       |
+| load                        |       |       |       |       | v8x16 | v16x8 | v32x4 | v64x2 | v8x16 | v16x8 | v32x4 | v64x2 | v32x4 | v64x2 |
+| store                       |       |       |       |       | v8x16 | v16x8 | v32x4 | v64x2 | v8x16 | v16x8 | v32x4 | v64x2 | v32x4 | v64x2 |
+| load1                       |       |       |       |       |       |       | v32x4 |       |       |       | v32x4 |       | v32x4 |       |
+| load2                       |       |       |       |       |       |       | v32x4 |       |       |       | v32x4 |       | v32x4 |       |
+| load3                       |       |       |       |       |       |       | v32x4 |       |       |       | v32x4 |       | v32x4 |       |
+| store1                      |       |       |       |       |       |       | v32x4 |       |       |       | v32x4 |       | v32x4 |       |
+| store2                      |       |       |       |       |       |       | v32x4 |       |       |       | v32x4 |       | v32x4 |       |
+| store3                      |       |       |       |       |       |       | v32x4 |       |       |       | v32x4 |       | v32x4 |       |
