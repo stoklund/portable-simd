@@ -1181,6 +1181,81 @@ def S.store(mem, addr, data):
         mem.store(S.LaneBits, addr + i * lane_bytes, data[i])
 ```
 
+### Endianness and lane numbering
+
+The lane-wise load and store operations used above will read and write a lane
+using the native endianness, so for example storing a vector with the `i32x4`
+interpretation is equivalent to storing 4 `i32` values to memory. This
+specification has some hard requirements for the lane and bit numbering:
+
+- The bits in a `v128` are numbered 0-127.
+- Lanes are numbered in the same direction as the `v128` bits.
+- Lanes are stored in memory in ascending addresses, so lane 0 gets the lowest
+  address.
+
+These hard requirements still leave multiple ways of mapping endianness to
+vectors:
+
+- **Little-endian direct**: The bit with the lowest number in each lane is the
+  *least* significant bit. This is the natural mapping for Intel SSE and the
+  little-endian modes of ARM NEON and MIPS MSA.
+
+- **Big-endian direct**: The bit with the lowest number in each lane is the *most*
+  significant bit. This is the natural mapping for big-endian PowerPC.
+
+- **Big-endian hybrid**: The bit with the lowest number in each lane is the
+  *least* significant bit. This is the natural mapping for the big-endian modes
+  of ARM NEON and MIPS MSA.
+
+The mapping is visible when reinterpreting a vector:
+```python
+a = i64x2.build([0x0123456789abcdef, 0x1122334455667788])
+x = i8x16.extractLane(a, 0)
+```
+The extracted lane, `x`, will be `0xef` in the little-endian direct and the
+big-endian hybrid mappings, but `0x01` in the big-endian direct mapping.
+
+The big-endian hybrid mapping requires separate load and store instructions for
+each lane width, while the direct mappings can use the same instruction for all
+vectors. For example, the `a` vector above will be stored like this with the
+big-endian hybrid mapping:
+
+```
+v64x2.store: 01 23 45 67 89 ab cd ef 11 22 33 44 55 66 77 88
+v32x4.store: 89 ab cd ef 01 23 45 67 55 66 77 88 11 22 33 44
+v16x8.store: cd ef 89 ab 45 67 01 23 77 88 55 66 33 44 11 22
+v8x16.store: ef cd ab 89 67 45 23 01 88 77 66 55 44 33 22 11
+```
+The big-endian direct mapping would write `a` like this:
+```
+v64x2.store: 01 23 45 67 89 ab cd ef 11 22 33 44 55 66 77 88
+v32x4.store: 01 23 45 67 89 ab cd ef 11 22 33 44 55 66 77 88
+v16x8.store: 01 23 45 67 89 ab cd ef 11 22 33 44 55 66 77 88
+v8x16.store: 01 23 45 67 89 ab cd ef 11 22 33 44 55 66 77 88
+```
+The little-endian direct mapping would write `a` like this:
+```
+v64x2.store: ef cd ab 89 67 45 23 01 88 77 66 55 44 33 22 11
+v32x4.store: ef cd ab 89 67 45 23 01 88 77 66 55 44 33 22 11
+v16x8.store: ef cd ab 89 67 45 23 01 88 77 66 55 44 33 22 11
+v8x16.store: ef cd ab 89 67 45 23 01 88 77 66 55 44 33 22 11
+```
+
+This specification doesn't address type conversions since there is only one
+type, `v128`, but note that it is common for more fine-grained SIMD type systems
+to specify 'bit casts' between different SIMD types of the same size as
+equivalent to storing one type and loading another from the same address. Both
+LLVM and SIMD.js specify bit casts that way. LLVM's ARM and MIPS targets use the
+hybrid lane mapping in their big-endian modes and translate `bitcast`
+instructions to shuffles.
+
+It would be possible for SIMD.js to use the big-endian direct mapping on ARM and
+MIPS by numbering the lanes differently and using the 64x2 load/store
+instructions for all memory operations. It would also be possible to use the
+big-endian hybrid mapping by expanding bit casts into shuffles.
+
+WebAssembly is little-endian only.
+
 ### Partial load
 
 * `v32x4.load1(mem: Buffer, addr: ByteOffset) -> v128`
