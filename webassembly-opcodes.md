@@ -7,73 +7,74 @@ mapping](webassembly-mapping.md).
 
 
 ## `b8x16` operations
-| WebAssembly                                                      | Portable SIMD       |
-|:-----------------------------------------------------------------|:--------------------|
-| `b8x16.build(x: boolean[16]) -> b8x16`                           | `b8x16.build`       |
-| `b8x16.splat(x: boolean) -> b8x16`                               | `b8x16.splat`       |
-| `b8x16.extractLane(a: b8x16, i: LaneIdx16) -> boolean`           | `b8x16.extractLane` |
-| `b8x16.replaceLane(a: b8x16, i: LaneIdx16, x: boolean) -> b8x16` | `b8x16.replaceLane` |
-| `b8x16.and(a: b8x16, b: b8x16) -> b8x16`                         | `b8x16.and`         |
-| `b8x16.or(a: b8x16, b: b8x16) -> b8x16`                          | `b8x16.or`          |
-| `b8x16.xor(a: b8x16, b: b8x16) -> b8x16`                         | `b8x16.xor`         |
-| `b8x16.not(a: b8x16) -> b8x16`                                   | `b8x16.not`         |
-| `b8x16.anyTrue(a: b8x16) -> boolean`                             | `b8x16.anyTrue`     |
-| `b8x16.allTrue(a: b8x16) -> boolean`                             | `b8x16.allTrue`     |
+| WebAssembly                                                  | Portable SIMD       |
+|:-------------------------------------------------------------|:--------------------|
+| `b8x16.build(x: i32[16]) -> b8x16`                           | `b8x16.build`       |
+| `b8x16.splat(x: i32) -> b8x16`                               | `b8x16.splat`       |
+| `b8x16.extractLane(a: b8x16, i: LaneIdx16) -> i32`           | `b8x16.extractLane` |
+| `b8x16.replaceLane(a: b8x16, i: LaneIdx16, x: i32) -> b8x16` | `b8x16.replaceLane` |
+| `b8x16.and(a: b8x16, b: b8x16) -> b8x16`                     | `b8x16.and`         |
+| `b8x16.or(a: b8x16, b: b8x16) -> b8x16`                      | `b8x16.or`          |
+| `b8x16.xor(a: b8x16, b: b8x16) -> b8x16`                     | `b8x16.xor`         |
+| `b8x16.not(a: b8x16) -> b8x16`                               | `b8x16.not`         |
+| `b8x16.anyTrue(a: b8x16) -> i32`                             | `b8x16.anyTrue`     |
+| `b8x16.allTrue(a: b8x16) -> i32`                             | `b8x16.allTrue`     |
 
 ## `b16x8` operations
-| WebAssembly                                                     | Portable SIMD       |
-|:----------------------------------------------------------------|:--------------------|
-| `b16x8.build(x: boolean[8]) -> b16x8`                           | `b16x8.build`       |
-| `b16x8.splat(x: boolean) -> b16x8`                              | `b16x8.splat`       |
-| `b16x8.extractLane(a: b16x8, i: LaneIdx8) -> boolean`           | `b16x8.extractLane` |
-| `b16x8.replaceLane(a: b16x8, i: LaneIdx8, x: boolean) -> b16x8` | `b16x8.replaceLane` |
-| `b16x8.and(a: b16x8, b: b16x8) -> b16x8`                        | `b16x8.and`         |
-| `b16x8.or(a: b16x8, b: b16x8) -> b16x8`                         | `b16x8.or`          |
-| `b16x8.xor(a: b16x8, b: b16x8) -> b16x8`                        | `b16x8.xor`         |
-| `b16x8.not(a: b16x8) -> b16x8`                                  | `b16x8.not`         |
-| `b16x8.anyTrue(a: b16x8) -> boolean`                            | `b16x8.anyTrue`     |
-| `b16x8.allTrue(a: b16x8) -> boolean`                            | `b16x8.allTrue`     |
+| WebAssembly                                                 | Portable SIMD       |
+|:------------------------------------------------------------|:--------------------|
+| `b16x8.build(x: i32[8]) -> b16x8`                           | `b16x8.build`       |
+| `b16x8.splat(x: i32) -> b16x8`                              | `b16x8.splat`       |
+| `b16x8.extractLane(a: b16x8, i: LaneIdx8) -> i32`           | `b16x8.extractLane` |
+| `b16x8.replaceLane(a: b16x8, i: LaneIdx8, x: i32) -> b16x8` | `b16x8.replaceLane` |
+| `b16x8.and(a: b16x8, b: b16x8) -> b16x8`                    | `b16x8.and`         |
+| `b16x8.or(a: b16x8, b: b16x8) -> b16x8`                     | `b16x8.or`          |
+| `b16x8.xor(a: b16x8, b: b16x8) -> b16x8`                    | `b16x8.xor`         |
+| `b16x8.not(a: b16x8) -> b16x8`                              | `b16x8.not`         |
+| `b16x8.anyTrue(a: b16x8) -> i32`                            | `b16x8.anyTrue`     |
+| `b16x8.allTrue(a: b16x8) -> i32`                            | `b16x8.allTrue`     |
 
 ## `b32x4` operations
-| WebAssembly                                                     | Portable SIMD       |
-|:----------------------------------------------------------------|:--------------------|
-| `b32x4.build(x: boolean[4]) -> b32x4`                           | `b32x4.build`       |
-| `b32x4.splat(x: boolean) -> b32x4`                              | `b32x4.splat`       |
-| `b32x4.extractLane(a: b32x4, i: LaneIdx4) -> boolean`           | `b32x4.extractLane` |
-| `b32x4.replaceLane(a: b32x4, i: LaneIdx4, x: boolean) -> b32x4` | `b32x4.replaceLane` |
-| `b32x4.and(a: b32x4, b: b32x4) -> b32x4`                        | `b32x4.and`         |
-| `b32x4.or(a: b32x4, b: b32x4) -> b32x4`                         | `b32x4.or`          |
-| `b32x4.xor(a: b32x4, b: b32x4) -> b32x4`                        | `b32x4.xor`         |
-| `b32x4.not(a: b32x4) -> b32x4`                                  | `b32x4.not`         |
-| `b32x4.anyTrue(a: b32x4) -> boolean`                            | `b32x4.anyTrue`     |
-| `b32x4.allTrue(a: b32x4) -> boolean`                            | `b32x4.allTrue`     |
+| WebAssembly                                                 | Portable SIMD       |
+|:------------------------------------------------------------|:--------------------|
+| `b32x4.build(x: i32[4]) -> b32x4`                           | `b32x4.build`       |
+| `b32x4.splat(x: i32) -> b32x4`                              | `b32x4.splat`       |
+| `b32x4.extractLane(a: b32x4, i: LaneIdx4) -> i32`           | `b32x4.extractLane` |
+| `b32x4.replaceLane(a: b32x4, i: LaneIdx4, x: i32) -> b32x4` | `b32x4.replaceLane` |
+| `b32x4.and(a: b32x4, b: b32x4) -> b32x4`                    | `b32x4.and`         |
+| `b32x4.or(a: b32x4, b: b32x4) -> b32x4`                     | `b32x4.or`          |
+| `b32x4.xor(a: b32x4, b: b32x4) -> b32x4`                    | `b32x4.xor`         |
+| `b32x4.not(a: b32x4) -> b32x4`                              | `b32x4.not`         |
+| `b32x4.anyTrue(a: b32x4) -> i32`                            | `b32x4.anyTrue`     |
+| `b32x4.allTrue(a: b32x4) -> i32`                            | `b32x4.allTrue`     |
 
 ## `b64x2` operations
-| WebAssembly                                                     | Portable SIMD       |
-|:----------------------------------------------------------------|:--------------------|
-| `b64x2.build(x: boolean[2]) -> b64x2`                           | `b64x2.build`       |
-| `b64x2.splat(x: boolean) -> b64x2`                              | `b64x2.splat`       |
-| `b64x2.extractLane(a: b64x2, i: LaneIdx2) -> boolean`           | `b64x2.extractLane` |
-| `b64x2.replaceLane(a: b64x2, i: LaneIdx2, x: boolean) -> b64x2` | `b64x2.replaceLane` |
-| `b64x2.and(a: b64x2, b: b64x2) -> b64x2`                        | `b64x2.and`         |
-| `b64x2.or(a: b64x2, b: b64x2) -> b64x2`                         | `b64x2.or`          |
-| `b64x2.xor(a: b64x2, b: b64x2) -> b64x2`                        | `b64x2.xor`         |
-| `b64x2.not(a: b64x2) -> b64x2`                                  | `b64x2.not`         |
-| `b64x2.anyTrue(a: b64x2) -> boolean`                            | `b64x2.anyTrue`     |
-| `b64x2.allTrue(a: b64x2) -> boolean`                            | `b64x2.allTrue`     |
+| WebAssembly                                                 | Portable SIMD       |
+|:------------------------------------------------------------|:--------------------|
+| `b64x2.build(x: i32[2]) -> b64x2`                           | `b64x2.build`       |
+| `b64x2.splat(x: i32) -> b64x2`                              | `b64x2.splat`       |
+| `b64x2.extractLane(a: b64x2, i: LaneIdx2) -> i32`           | `b64x2.extractLane` |
+| `b64x2.replaceLane(a: b64x2, i: LaneIdx2, x: i32) -> b64x2` | `b64x2.replaceLane` |
+| `b64x2.and(a: b64x2, b: b64x2) -> b64x2`                    | `b64x2.and`         |
+| `b64x2.or(a: b64x2, b: b64x2) -> b64x2`                     | `b64x2.or`          |
+| `b64x2.xor(a: b64x2, b: b64x2) -> b64x2`                    | `b64x2.xor`         |
+| `b64x2.not(a: b64x2) -> b64x2`                              | `b64x2.not`         |
+| `b64x2.anyTrue(a: b64x2) -> i32`                            | `b64x2.anyTrue`     |
+| `b64x2.allTrue(a: b64x2) -> i32`                            | `b64x2.allTrue`     |
 
 ## `i8x16` operations
 | WebAssembly                                                    | Portable SIMD              |
 |:---------------------------------------------------------------|:---------------------------|
-| `i8x16.reinterpret/i16x8(a: i16x8) -> i8x16`                   | `-`                        |
-| `i8x16.reinterpret/i32x4(a: i32x4) -> i8x16`                   | `-`                        |
-| `i8x16.reinterpret/i64x2(a: i64x2) -> i8x16`                   | `-`                        |
-| `i8x16.reinterpret/f32x4(a: f32x4) -> i8x16`                   | `-`                        |
-| `i8x16.reinterpret/f64x2(a: f64x2) -> i8x16`                   | `-`                        |
-| `i8x16.build(x: i8[16]) -> i8x16`                              | `i8x16.build`              |
-| `i8x16.splat(x: i8) -> i8x16`                                  | `i8x16.splat`              |
-| `i8x16.extractLane(a: i8x16, i: LaneIdx16) -> i8`              | `i8x16.extractLane`        |
-| `i8x16.replaceLane(a: i8x16, i: LaneIdx16, x: i8) -> i8x16`    | `i8x16.replaceLane`        |
+| `i8x16.reinterpret/i16x8(a: i16x8) -> i8x16`                   | -                          |
+| `i8x16.reinterpret/i32x4(a: i32x4) -> i8x16`                   | -                          |
+| `i8x16.reinterpret/i64x2(a: i64x2) -> i8x16`                   | -                          |
+| `i8x16.reinterpret/f32x4(a: f32x4) -> i8x16`                   | -                          |
+| `i8x16.reinterpret/f64x2(a: f64x2) -> i8x16`                   | -                          |
+| `i8x16.build(x: i32[16]) -> i8x16`                             | `i8x16.build`              |
+| `i8x16.splat(x: i32) -> i8x16`                                 | `i8x16.splat`              |
+| `i8x16.extractLane_s(a: i8x16, i: LaneIdx16) -> i32`           | `i8x16.extractLane`        |
+| `i8x16.extractLane_u(a: i8x16, i: LaneIdx16) -> i32`           | `i8x16.extractLane`        |
+| `i8x16.replaceLane(a: i8x16, i: LaneIdx16, x: i32) -> i8x16`   | `i8x16.replaceLane`        |
 | `i8x16.select(s: b8x16, t: i8x16, f: i8x16) -> i8x16`          | `v8x16.select`             |
 | `i8x16.swizzle(a: i8x16, s: LaneIdx16[16]) -> i8x16`           | `v8x16.swizzle`            |
 | `i8x16.shuffle(a: i8x16, b: i8x16, s: LaneIdx32[16]) -> i8x16` | `v8x16.shuffle`            |
@@ -85,9 +86,9 @@ mapping](webassembly-mapping.md).
 | `i8x16.addSaturate_u(a: i8x16, b: i8x16) -> i8x16`             | `u8x16.addSaturate`        |
 | `i8x16.subSaturate_s(a: i8x16, b: i8x16) -> i8x16`             | `s8x16.subSaturate`        |
 | `i8x16.subSaturate_u(a: i8x16, b: i8x16) -> i8x16`             | `u8x16.subSaturate`        |
-| `i8x16.shl(a: i8x16, y: i8) -> i8x16`                          | `i8x16.shiftLeftByScalar`  |
-| `i8x16.shr_s(a: i8x16, y: i8) -> i8x16`                        | `s8x16.shiftRightByScalar` |
-| `i8x16.shr_u(a: i8x16, y: i8) -> i8x16`                        | `u8x16.shiftRightByScalar` |
+| `i8x16.shl(a: i8x16, y: i32) -> i8x16`                         | `i8x16.shiftLeftByScalar`  |
+| `i8x16.shr_s(a: i8x16, y: i32) -> i8x16`                       | `s8x16.shiftRightByScalar` |
+| `i8x16.shr_u(a: i8x16, y: i32) -> i8x16`                       | `u8x16.shiftRightByScalar` |
 | `i8x16.and(a: i8x16, b: i8x16) -> i8x16`                       | `v128.and`                 |
 | `i8x16.or(a: i8x16, b: i8x16) -> i8x16`                        | `v128.or`                  |
 | `i8x16.xor(a: i8x16, b: i8x16) -> i8x16`                       | `v128.xor`                 |
@@ -108,15 +109,16 @@ mapping](webassembly-mapping.md).
 ## `i16x8` operations
 | WebAssembly                                                   | Portable SIMD              |
 |:--------------------------------------------------------------|:---------------------------|
-| `i16x8.reinterpret/i8x16(a: i8x16) -> i16x8`                  | `-`                        |
-| `i16x8.reinterpret/i32x4(a: i32x4) -> i16x8`                  | `-`                        |
-| `i16x8.reinterpret/i64x2(a: i64x2) -> i16x8`                  | `-`                        |
-| `i16x8.reinterpret/f32x4(a: f32x4) -> i16x8`                  | `-`                        |
-| `i16x8.reinterpret/f64x2(a: f64x2) -> i16x8`                  | `-`                        |
-| `i16x8.build(x: i16[8]) -> i16x8`                             | `i16x8.build`              |
-| `i16x8.splat(x: i16) -> i16x8`                                | `i16x8.splat`              |
-| `i16x8.extractLane(a: i16x8, i: LaneIdx8) -> i16`             | `i16x8.extractLane`        |
-| `i16x8.replaceLane(a: i16x8, i: LaneIdx8, x: i16) -> i16x8`   | `i16x8.replaceLane`        |
+| `i16x8.reinterpret/i8x16(a: i8x16) -> i16x8`                  | -                          |
+| `i16x8.reinterpret/i32x4(a: i32x4) -> i16x8`                  | -                          |
+| `i16x8.reinterpret/i64x2(a: i64x2) -> i16x8`                  | -                          |
+| `i16x8.reinterpret/f32x4(a: f32x4) -> i16x8`                  | -                          |
+| `i16x8.reinterpret/f64x2(a: f64x2) -> i16x8`                  | -                          |
+| `i16x8.build(x: i32[8]) -> i16x8`                             | `i16x8.build`              |
+| `i16x8.splat(x: i32) -> i16x8`                                | `i16x8.splat`              |
+| `i16x8.extractLane_s(a: i16x8, i: LaneIdx8) -> i32`           | `i16x8.extractLane`        |
+| `i16x8.extractLane_u(a: i16x8, i: LaneIdx8) -> i32`           | `i16x8.extractLane`        |
+| `i16x8.replaceLane(a: i16x8, i: LaneIdx8, x: i32) -> i16x8`   | `i16x8.replaceLane`        |
 | `i16x8.select(s: b16x8, t: i16x8, f: i16x8) -> i16x8`         | `v16x8.select`             |
 | `i16x8.swizzle(a: i16x8, s: LaneIdx8[8]) -> i16x8`            | `v16x8.swizzle`            |
 | `i16x8.shuffle(a: i16x8, b: i16x8, s: LaneIdx16[8]) -> i16x8` | `v16x8.shuffle`            |
@@ -128,9 +130,9 @@ mapping](webassembly-mapping.md).
 | `i16x8.addSaturate_u(a: i16x8, b: i16x8) -> i16x8`            | `u16x8.addSaturate`        |
 | `i16x8.subSaturate_s(a: i16x8, b: i16x8) -> i16x8`            | `s16x8.subSaturate`        |
 | `i16x8.subSaturate_u(a: i16x8, b: i16x8) -> i16x8`            | `u16x8.subSaturate`        |
-| `i16x8.shl(a: i16x8, y: i8) -> i16x8`                         | `i16x8.shiftLeftByScalar`  |
-| `i16x8.shr_s(a: i16x8, y: i8) -> i16x8`                       | `s16x8.shiftRightByScalar` |
-| `i16x8.shr_u(a: i16x8, y: i8) -> i16x8`                       | `u16x8.shiftRightByScalar` |
+| `i16x8.shl(a: i16x8, y: i32) -> i16x8`                        | `i16x8.shiftLeftByScalar`  |
+| `i16x8.shr_s(a: i16x8, y: i32) -> i16x8`                      | `s16x8.shiftRightByScalar` |
+| `i16x8.shr_u(a: i16x8, y: i32) -> i16x8`                      | `u16x8.shiftRightByScalar` |
 | `i16x8.and(a: i16x8, b: i16x8) -> i16x8`                      | `v128.and`                 |
 | `i16x8.or(a: i16x8, b: i16x8) -> i16x8`                       | `v128.or`                  |
 | `i16x8.xor(a: i16x8, b: i16x8) -> i16x8`                      | `v128.xor`                 |
@@ -151,11 +153,11 @@ mapping](webassembly-mapping.md).
 ## `i32x4` operations
 | WebAssembly                                                  | Portable SIMD              |
 |:-------------------------------------------------------------|:---------------------------|
-| `i32x4.reinterpret/i8x16(a: i8x16) -> i32x4`                 | `-`                        |
-| `i32x4.reinterpret/i16x8(a: i16x8) -> i32x4`                 | `-`                        |
-| `i32x4.reinterpret/i64x2(a: i64x2) -> i32x4`                 | `-`                        |
-| `i32x4.reinterpret/f32x4(a: f32x4) -> i32x4`                 | `-`                        |
-| `i32x4.reinterpret/f64x2(a: f64x2) -> i32x4`                 | `-`                        |
+| `i32x4.reinterpret/i8x16(a: i8x16) -> i32x4`                 | -                          |
+| `i32x4.reinterpret/i16x8(a: i16x8) -> i32x4`                 | -                          |
+| `i32x4.reinterpret/i64x2(a: i64x2) -> i32x4`                 | -                          |
+| `i32x4.reinterpret/f32x4(a: f32x4) -> i32x4`                 | -                          |
+| `i32x4.reinterpret/f64x2(a: f64x2) -> i32x4`                 | -                          |
 | `i32x4.build(x: i32[4]) -> i32x4`                            | `i32x4.build`              |
 | `i32x4.splat(x: i32) -> i32x4`                               | `i32x4.splat`              |
 | `i32x4.extractLane(a: i32x4, i: LaneIdx4) -> i32`            | `i32x4.extractLane`        |
@@ -167,9 +169,9 @@ mapping](webassembly-mapping.md).
 | `i32x4.sub(a: i32x4, b: i32x4) -> i32x4`                     | `i32x4.sub`                |
 | `i32x4.mul(a: i32x4, b: i32x4) -> i32x4`                     | `i32x4.mul`                |
 | `i32x4.neg(a: i32x4) -> i32x4`                               | `i32x4.neg`                |
-| `i32x4.shl(a: i32x4, y: i8) -> i32x4`                        | `i32x4.shiftLeftByScalar`  |
-| `i32x4.shr_s(a: i32x4, y: i8) -> i32x4`                      | `s32x4.shiftRightByScalar` |
-| `i32x4.shr_u(a: i32x4, y: i8) -> i32x4`                      | `u32x4.shiftRightByScalar` |
+| `i32x4.shl(a: i32x4, y: i32) -> i32x4`                       | `i32x4.shiftLeftByScalar`  |
+| `i32x4.shr_s(a: i32x4, y: i32) -> i32x4`                     | `s32x4.shiftRightByScalar` |
+| `i32x4.shr_u(a: i32x4, y: i32) -> i32x4`                     | `u32x4.shiftRightByScalar` |
 | `i32x4.and(a: i32x4, b: i32x4) -> i32x4`                     | `v128.and`                 |
 | `i32x4.or(a: i32x4, b: i32x4) -> i32x4`                      | `v128.or`                  |
 | `i32x4.xor(a: i32x4, b: i32x4) -> i32x4`                     | `v128.xor`                 |
@@ -192,17 +194,17 @@ mapping](webassembly-mapping.md).
 | `i32x4.store1(mem: Buffer, addr: ByteOffset, data: i32x4)`   | `v32x4.store1`             |
 | `i32x4.store2(mem: Buffer, addr: ByteOffset, data: i32x4)`   | `v32x4.store2`             |
 | `i32x4.store3(mem: Buffer, addr: ByteOffset, data: i32x4)`   | `v32x4.store3`             |
-| `i32x4.trunc_s(a: f32x4) -> (result: f32x4, fail: boolean)`  | `s32x4.fromFloat`          |
-| `i32x4.trunc_u(a: f32x4) -> (result: f32x4, fail: boolean)`  | `u32x4.fromFloat`          |
+| `i32x4.trunc_s(a: f32x4) -> (result: f32x4, fail: i32)`      | `s32x4.fromFloat`          |
+| `i32x4.trunc_u(a: f32x4) -> (result: f32x4, fail: i32)`      | `u32x4.fromFloat`          |
 
 ## `i64x2` operations
 | WebAssembly                                                  | Portable SIMD              |
 |:-------------------------------------------------------------|:---------------------------|
-| `i64x2.reinterpret/i8x16(a: i8x16) -> i64x2`                 | `-`                        |
-| `i64x2.reinterpret/i16x8(a: i16x8) -> i64x2`                 | `-`                        |
-| `i64x2.reinterpret/i32x4(a: i32x4) -> i64x2`                 | `-`                        |
-| `i64x2.reinterpret/f32x4(a: f32x4) -> i64x2`                 | `-`                        |
-| `i64x2.reinterpret/f64x2(a: f64x2) -> i64x2`                 | `-`                        |
+| `i64x2.reinterpret/i8x16(a: i8x16) -> i64x2`                 | -                          |
+| `i64x2.reinterpret/i16x8(a: i16x8) -> i64x2`                 | -                          |
+| `i64x2.reinterpret/i32x4(a: i32x4) -> i64x2`                 | -                          |
+| `i64x2.reinterpret/f32x4(a: f32x4) -> i64x2`                 | -                          |
+| `i64x2.reinterpret/f64x2(a: f64x2) -> i64x2`                 | -                          |
 | `i64x2.build(x: i64[2]) -> i64x2`                            | `i64x2.build`              |
 | `i64x2.splat(x: i64) -> i64x2`                               | `i64x2.splat`              |
 | `i64x2.extractLane(a: i64x2, i: LaneIdx2) -> i64`            | `i64x2.extractLane`        |
@@ -214,9 +216,9 @@ mapping](webassembly-mapping.md).
 | `i64x2.sub(a: i64x2, b: i64x2) -> i64x2`                     | `i64x2.sub`                |
 | `i64x2.mul(a: i64x2, b: i64x2) -> i64x2`                     | `i64x2.mul`                |
 | `i64x2.neg(a: i64x2) -> i64x2`                               | `i64x2.neg`                |
-| `i64x2.shl(a: i64x2, y: i8) -> i64x2`                        | `i64x2.shiftLeftByScalar`  |
-| `i64x2.shr_s(a: i64x2, y: i8) -> i64x2`                      | `s64x2.shiftRightByScalar` |
-| `i64x2.shr_u(a: i64x2, y: i8) -> i64x2`                      | `u64x2.shiftRightByScalar` |
+| `i64x2.shl(a: i64x2, y: i32) -> i64x2`                       | `i64x2.shiftLeftByScalar`  |
+| `i64x2.shr_s(a: i64x2, y: i32) -> i64x2`                     | `s64x2.shiftRightByScalar` |
+| `i64x2.shr_u(a: i64x2, y: i32) -> i64x2`                     | `u64x2.shiftRightByScalar` |
 | `i64x2.and(a: i64x2, b: i64x2) -> i64x2`                     | `v128.and`                 |
 | `i64x2.or(a: i64x2, b: i64x2) -> i64x2`                      | `v128.or`                  |
 | `i64x2.xor(a: i64x2, b: i64x2) -> i64x2`                     | `v128.xor`                 |
@@ -233,17 +235,17 @@ mapping](webassembly-mapping.md).
 | `i64x2.ge_u(a: i64x2, b: i64x2) -> b64x2`                    | `u64x2.greaterThanOrEqual` |
 | `i64x2.load(mem: Buffer, addr: ByteOffset) -> i64x2`         | `v64x2.load`               |
 | `i64x2.store(mem: Buffer, addr: ByteOffset, data: i64x2)`    | `v64x2.store`              |
-| `i64x2.trunc_s(a: f64x2) -> (result: f64x2, fail: boolean)`  | `s64x2.fromFloat`          |
-| `i64x2.trunc_u(a: f64x2) -> (result: f64x2, fail: boolean)`  | `u64x2.fromFloat`          |
+| `i64x2.trunc_s(a: f64x2) -> (result: f64x2, fail: i32)`      | `s64x2.fromFloat`          |
+| `i64x2.trunc_u(a: f64x2) -> (result: f64x2, fail: i32)`      | `u64x2.fromFloat`          |
 
 ## `f32x4` operations
 | WebAssembly                                                   | Portable SIMD                       |
 |:--------------------------------------------------------------|:------------------------------------|
-| `f32x4.reinterpret/i8x16(a: i8x16) -> f32x4`                  | `-`                                 |
-| `f32x4.reinterpret/i16x8(a: i16x8) -> f32x4`                  | `-`                                 |
-| `f32x4.reinterpret/i32x4(a: i32x4) -> f32x4`                  | `-`                                 |
-| `f32x4.reinterpret/i64x2(a: i64x2) -> f32x4`                  | `-`                                 |
-| `f32x4.reinterpret/f64x2(a: f64x2) -> f32x4`                  | `-`                                 |
+| `f32x4.reinterpret/i8x16(a: i8x16) -> f32x4`                  | -                                   |
+| `f32x4.reinterpret/i16x8(a: i16x8) -> f32x4`                  | -                                   |
+| `f32x4.reinterpret/i32x4(a: i32x4) -> f32x4`                  | -                                   |
+| `f32x4.reinterpret/i64x2(a: i64x2) -> f32x4`                  | -                                   |
+| `f32x4.reinterpret/f64x2(a: f64x2) -> f32x4`                  | -                                   |
 | `f32x4.build(x: f32[4]) -> f32x4`                             | `f32x4.build`                       |
 | `f32x4.splat(x: f32) -> f32x4`                                | `f32x4.splat`                       |
 | `f32x4.extractLane(a: f32x4, i: LaneIdx4) -> f32`             | `f32x4.extractLane`                 |
@@ -288,11 +290,11 @@ mapping](webassembly-mapping.md).
 ## `f64x2` operations
 | WebAssembly                                                   | Portable SIMD                       |
 |:--------------------------------------------------------------|:------------------------------------|
-| `f64x2.reinterpret/i8x16(a: i8x16) -> f64x2`                  | `-`                                 |
-| `f64x2.reinterpret/i16x8(a: i16x8) -> f64x2`                  | `-`                                 |
-| `f64x2.reinterpret/i32x4(a: i32x4) -> f64x2`                  | `-`                                 |
-| `f64x2.reinterpret/i64x2(a: i64x2) -> f64x2`                  | `-`                                 |
-| `f64x2.reinterpret/f32x4(a: f32x4) -> f64x2`                  | `-`                                 |
+| `f64x2.reinterpret/i8x16(a: i8x16) -> f64x2`                  | -                                   |
+| `f64x2.reinterpret/i16x8(a: i16x8) -> f64x2`                  | -                                   |
+| `f64x2.reinterpret/i32x4(a: i32x4) -> f64x2`                  | -                                   |
+| `f64x2.reinterpret/i64x2(a: i64x2) -> f64x2`                  | -                                   |
+| `f64x2.reinterpret/f32x4(a: f32x4) -> f64x2`                  | -                                   |
 | `f64x2.build(x: f64[2]) -> f64x2`                             | `f64x2.build`                       |
 | `f64x2.splat(x: f64) -> f64x2`                                | `f64x2.splat`                       |
 | `f64x2.extractLane(a: f64x2, i: LaneIdx2) -> f64`             | `f64x2.extractLane`                 |
