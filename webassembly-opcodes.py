@@ -71,6 +71,9 @@ def wasm_sigs(it):
 
     # Generate real operations.
     for op in spec.operations:
+        # These operations are not mapped to WebAssembly.
+        if op.name in ('minNum', 'maxNum'):
+            continue
         op_name = '{}.{}'.format(it.name, name_map.get(op.name, op.name))
         op_it = op.get_definition(it)
         if op_it:

@@ -278,8 +278,6 @@ mapping](webassembly-mapping.md).
 | `f32x4.abs(a: f32x4) -> f32x4`                                | [f32x4.abs](portable-simd.md#absolute-value) |
 | `f32x4.min(a: f32x4, b: f32x4) -> f32x4`                      | [f32x4.min](portable-simd.md#nan-propagating-minimum) |
 | `f32x4.max(a: f32x4, b: f32x4) -> f32x4`                      | [f32x4.max](portable-simd.md#nan-propagating-maximum) |
-| `f32x4.minNum(a: f32x4, b: f32x4) -> f32x4`                   | [f32x4.minNum](portable-simd.md#nan-suppressing-minimum) |
-| `f32x4.maxNum(a: f32x4, b: f32x4) -> f32x4`                   | [f32x4.maxNum](portable-simd.md#nan-suppressing-maximum) |
 | `f32x4.div(a: f32x4, b: f32x4, rmode: RoundingMode) -> f32x4` | [f32x4.div](portable-simd.md#division) |
 | `f32x4.sqrt(a: f32x4, rmode: RoundingMode) -> f32x4`          | [f32x4.sqrt](portable-simd.md#square-root) |
 | `f32x4.reciprocalApproximation(a: f32x4) -> f32x4`            | [f32x4.reciprocalApproximation](portable-simd.md#reciprocal-approximation) |
@@ -321,8 +319,6 @@ mapping](webassembly-mapping.md).
 | `f64x2.abs(a: f64x2) -> f64x2`                                | [f64x2.abs](portable-simd.md#absolute-value) |
 | `f64x2.min(a: f64x2, b: f64x2) -> f64x2`                      | [f64x2.min](portable-simd.md#nan-propagating-minimum) |
 | `f64x2.max(a: f64x2, b: f64x2) -> f64x2`                      | [f64x2.max](portable-simd.md#nan-propagating-maximum) |
-| `f64x2.minNum(a: f64x2, b: f64x2) -> f64x2`                   | [f64x2.minNum](portable-simd.md#nan-suppressing-minimum) |
-| `f64x2.maxNum(a: f64x2, b: f64x2) -> f64x2`                   | [f64x2.maxNum](portable-simd.md#nan-suppressing-maximum) |
 | `f64x2.div(a: f64x2, b: f64x2, rmode: RoundingMode) -> f64x2` | [f64x2.div](portable-simd.md#division) |
 | `f64x2.sqrt(a: f64x2, rmode: RoundingMode) -> f64x2`          | [f64x2.sqrt](portable-simd.md#square-root) |
 | `f64x2.reciprocalApproximation(a: f64x2) -> f64x2`            | [f64x2.reciprocalApproximation](portable-simd.md#reciprocal-approximation) |
