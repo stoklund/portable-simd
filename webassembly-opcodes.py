@@ -56,7 +56,8 @@ def format_sig(name, sig, res_type, arg_type=None):
         return '{}({}) -> {}'.format(name, args, result)
 
 
-# Yield tuples (wsig, psig) for each wasm operation on interpretation `it`.
+# Yield tuples (wsig, psig) for each wasm operation on interpretation
+# `it`.
 def wasm_sigs(it):
     # Pre-order of children, self removed.
     children = it.pre()[1:]
@@ -66,7 +67,7 @@ def wasm_sigs(it):
         for from_it in (i.name for i in wasm if i != it and i.name[0] != 'b'):
             wsig = '{}.reinterpret/{}(a: {}) -> {}'.format(
                     it.name, from_it, from_it, it.name)
-            yield (wsig, '')
+            yield (wsig, None)
 
     # Generate real operations.
     for op in spec.operations:
@@ -74,7 +75,6 @@ def wasm_sigs(it):
         op_it = op.get_definition(it)
         if op_it:
             # This operation has a definition for `it` or one of its parents.
-            psig = '{}.{}'.format(op_it.name, op.name)
             sig = op.signatures[op_it]
             arg_type = it.name
             # Special cases where arg_type != res_type.
@@ -83,11 +83,10 @@ def wasm_sigs(it):
             # Create s/u variants for functions that have i8/i16 results.
             if sig.result in ('i8', 'i16'):
                 sig = sig.with_result('i32')
-                yield (format_sig(op_name+'_s', sig, it.name, arg_type), psig)
-                yield (format_sig(op_name+'_u', sig, it.name, arg_type), psig)
+                yield (format_sig(op_name+'_s', sig, it.name, arg_type), sig)
+                yield (format_sig(op_name+'_u', sig, it.name, arg_type), sig)
             else:
-                wsig = format_sig(op_name, sig, it.name, arg_type)
-                yield (wsig, psig)
+                yield (format_sig(op_name, sig, it.name, arg_type), sig)
         else:
             # Check for child interpretation definitions.
             for ch_it in children:
@@ -104,22 +103,20 @@ def wasm_sigs(it):
                     suffixed = '{}_{}'.format(op_name, ch_it.name[0])
                     wsig = format_sig(suffixed, sig, it.name, arg_type)
                     psig = '{}.{}'.format(ch_it.name, op.name)
-                    yield (wsig, psig)
+                    yield (wsig, sig)
 
 for it in wasm:
     print('')
     print('## `{}` operations'.format(it.name))
     sigs = list(wasm_sigs(it))
     maxw = 2 + max(len(w) for w, p in sigs)
-    maxp = 2 + max(len(p) for w, p in sigs)
 
-    print('| {} | {} |'.format('WebAssembly'.ljust(maxw),
-                'Portable SIMD'.ljust(maxp)))
-    print('|:{}-|:{}-|'.format('-' * maxw, '-' * maxp))
+    print('| {} | {} |'.format('WebAssembly'.ljust(maxw), 'Portable SIMD'))
+    print('|:{}-|:--------------|'.format('-' * maxw))
     for wsig, psig in sigs:
         wsig = '`{}`'.format(wsig)
-        if psig == '':
-            psig = '-'
+        if psig:
+            psig = psig.mdlink()
         else:
-            psig = '`{}`'.format(psig)
-        print('| {} | {} |'.format(wsig.ljust(maxw), psig.ljust(maxp)))
+            psig = '-'
+        print('| {} | {} |'.format(wsig.ljust(maxw), psig))

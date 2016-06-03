@@ -17,6 +17,9 @@ class Interpretation(object):
     def __repr__(self):
         return 'Interpretation({})'.format(self.name)
 
+    def __str__(self):
+        return self.name
+
     def pre(self):
         '''
         Get a tuple containing a pre-order of all the children, starting with
@@ -66,18 +69,28 @@ class Signature(object):
     For the 'add'` operation, there are signatures for `i32x4.add`,
     `i8x16.add`, etc. The signature ties operations and interpretations
     together and stores the arguments and results too.
+
+    The `anchor` argument refers to the section of the spec where the Signature
+    is defined.
     '''
 
-    def __init__(self, interpretation, operation, args, result):
+    def __init__(self, interpretation, operation, args, result, anchor):
         self.interpretation = interpretation
         self.operation = operation
         self.args = args
         self.result = result
+        self.anchor = anchor
 
     def with_result(self, new_result):
         '''Return a new signature with a new result type'''
         return Signature(
-                self.interpretation, self.operation, self.args, new_result)
+                self.interpretation, self.operation, self.args, new_result,
+                self.anchor)
+
+    def mdlink(self, ext='md'):
+        '''Get a Markdown link to this specification.'''
+        return '[{}.{}](portable-simd.{}{})'.format(
+                self.interpretation, self.operation, ext, self.anchor)
 
 
 class Specification(object):
@@ -134,14 +147,23 @@ class Specification(object):
         # * `i32x4.add(a : v128, b : v128) -> v128`
         #
         found = list()
+        anchor = None
         for m in re.finditer(
-                r'^\* `([visufb][0-9x]+).(\w+)\((.*)\)\s*(->\s*(.*))?`', text,
+                r'^#+\s*(.*)|' +
+                r'^\* `(?P<it>[visufb][0-9x]+)\.' +
+                r'(?P<op>\w+)\((?P<args>.*)\)\s*(->\s*(?P<res>.*))?`', text,
                 re.MULTILINE):
-            interp = self.interpretations_byname[m.group(1)]
-            op = self.get_operation(m.group(2))
-            args = m.group(3)
-            result = m.group(5)
-            op.add_signature(interp, Signature(interp, op, args, result))
+            if m.group(0).startswith('#'):
+                # This is a section header.
+                anchor = '#' + '-'.join(m.group(1).lower().split())
+                continue
+
+            interp = self.interpretations_byname[m.group('it')]
+            op = self.get_operation(m.group('op'))
+            args = m.group('args')
+            result = m.group('res')
+            op.add_signature(
+                    interp, Signature(interp, op, args, result, anchor))
             interp.operations.append(op)
             found.append((interp, op))
         return found
