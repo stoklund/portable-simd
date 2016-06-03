@@ -16,6 +16,13 @@ class Interpretation(object):
     def __repr__(self):
         return 'Interpretation({})'.format(self.name)
 
+    def pre(self):
+        '''
+        Get a tuple containing a pre-order of all the children, starting with
+        self.
+        '''
+        return sum([c.pre() for c in self.children], (self,))
+
 class Operation(object):
     '''
     A SIMD operation as identified by name only.
