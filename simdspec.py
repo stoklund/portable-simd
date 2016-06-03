@@ -3,6 +3,7 @@
 #
 import re
 
+
 class Interpretation(object):
     '''One of the SIMD types or interpretations'''
 
@@ -23,10 +24,11 @@ class Interpretation(object):
         '''
         return sum([c.pre() for c in self.children], (self,))
 
+
 class Operation(object):
     '''
     A SIMD operation as identified by name only.
-    
+
     The 'add' operation is represented by one `Operation` object covering
     `i32x4.add`, `i8x16.add`, ...
     '''
@@ -39,9 +41,9 @@ class Operation(object):
     def __str__(self):
         return self.name
 
-    def add_signature(self, interp, args, result):
+    def add_signature(self, interp, sig):
         assert interp not in self.signatures, "Duplicate signature"
-        self.signatures[interp] = (args, result)
+        self.signatures[interp] = sig
 
     def get_definition(self, interp):
         '''
@@ -55,6 +57,28 @@ class Operation(object):
                 return interp
             interp = interp.parent
         return None
+
+
+class Signature(object):
+    '''
+    A specific SIMD operation signature.
+
+    For the 'add'` operation, there are signatures for `i32x4.add`,
+    `i8x16.add`, etc. The signature ties operations and interpretations
+    together and stores the arguments and results too.
+    '''
+
+    def __init__(self, interpretation, operation, args, result):
+        self.interpretation = interpretation
+        self.operation = operation
+        self.args = args
+        self.result = result
+
+    def with_result(self, new_result):
+        '''Return a new signature with a new result type'''
+        return Signature(
+                self.interpretation, self.operation, self.args, new_result)
+
 
 class Specification(object):
     '''Collection of SIMD specification objects'''
@@ -86,12 +110,15 @@ class Specification(object):
         return op
 
     def extract_interpretations(self, text):
-        '''Find new `Interpretation` declarations in the text, add them to spec.'''
+        '''
+        Find new `Interpretation` declarations in the text, add them to spec.
+        '''
         # Definitions look like:
         #
         # * `i32x4 : v32x4`: ...
         #
-        for m in re.finditer(r'^\* `([visufb][0-9x]+)( : ([visufb][0-9x]+))?`', text,
+        for m in re.finditer(
+                r'^\* `([visufb][0-9x]+)( : ([visufb][0-9x]+))?`', text,
                 re.MULTILINE):
             interp = Interpretation(m.group(1))
             pname = m.group(3)
@@ -107,20 +134,19 @@ class Specification(object):
         # * `i32x4.add(a : v128, b : v128) -> v128`
         #
         found = list()
-        for m in re.finditer(r'^\* `([visufb][0-9x]+).(\w+)\((.*)\)\s*(->\s*(.*))?`', text,
+        for m in re.finditer(
+                r'^\* `([visufb][0-9x]+).(\w+)\((.*)\)\s*(->\s*(.*))?`', text,
                 re.MULTILINE):
             interp = self.interpretations_byname[m.group(1)]
             op = self.get_operation(m.group(2))
             args = m.group(3)
             result = m.group(5)
-            op.add_signature(interp, args, result)
+            op.add_signature(interp, Signature(interp, op, args, result))
             interp.operations.append(op)
             found.append((interp, op))
         return found
-
 
     def parse(self, text):
         '''Parse the spec text and add all definitions to self'''
         self.extract_interpretations(text)
         self.extract_operations(text)
-
