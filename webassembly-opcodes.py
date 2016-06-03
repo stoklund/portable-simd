@@ -54,7 +54,7 @@ def format_sig(name, sig, res_type, arg_type=None):
         return '{}({})'.format(name, args)
     else:
         result = result.replace('v128', res_type).replace('boolean', 'i32')
-        return '{}({}) {}'.format(name, args, result)
+        return '{}({}) -> {}'.format(name, args, result)
 
 
 # Yield tuples (wsig, psig) for each wasm operation on interpretation `it`.
@@ -82,8 +82,8 @@ def wasm_sigs(it):
             if op.name in ('fromSignedInt', 'fromUnsignedInt'):
                 arg_type = 'i' + it.name[1:]
             # Create s/u variants for functions that have i8/i16 results.
-            if sig[1] in ('-> i8', '-> i16'):
-                sig = (sig[0], '-> i32')
+            if sig[1] in ('i8', 'i16'):
+                sig = (sig[0], 'i32')
                 yield (format_sig(op_name+'_s', sig, it.name, arg_type), psig)
                 yield (format_sig(op_name+'_u', sig, it.name, arg_type), psig)
             else:
@@ -98,6 +98,9 @@ def wasm_sigs(it):
                     # Special cases where arg_type != res_type.
                     if op.name in ('fromFloat'):
                         arg_type = 'f' + it.name[1:]
+                        # Also replace the (result, fail) result tuple.
+                        # This operation traps in wasm.
+                        sig = (sig[0], it.name)
                     # Create a '_s' or _u suffixed opcode.
                     suffixed = '{}_{}'.format(op_name, ch_it.name[0])
                     wsig = format_sig(suffixed, sig, it.name, arg_type)

@@ -107,12 +107,12 @@ class Specification(object):
         # * `i32x4.add(a : v128, b : v128) -> v128`
         #
         found = list()
-        for m in re.finditer(r'^\* `([visufb][0-9x]+).(\w+)\((.*)\)\s*(->.*)?`', text,
+        for m in re.finditer(r'^\* `([visufb][0-9x]+).(\w+)\((.*)\)\s*(->\s*(.*))?`', text,
                 re.MULTILINE):
             interp = self.interpretations_byname[m.group(1)]
             op = self.get_operation(m.group(2))
             args = m.group(3)
-            result = m.group(4)
+            result = m.group(5)
             op.add_signature(interp, args, result)
             interp.operations.append(op)
             found.append((interp, op))

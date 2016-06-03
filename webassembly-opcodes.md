@@ -151,92 +151,92 @@ mapping](webassembly-mapping.md).
 | `i16x8.store(mem: Buffer, addr: ByteOffset, data: i16x8)`     | `v16x8.store`              |
 
 ## `i32x4` operations
-| WebAssembly                                                  | Portable SIMD              |
-|:-------------------------------------------------------------|:---------------------------|
-| `i32x4.reinterpret/i8x16(a: i8x16) -> i32x4`                 | -                          |
-| `i32x4.reinterpret/i16x8(a: i16x8) -> i32x4`                 | -                          |
-| `i32x4.reinterpret/i64x2(a: i64x2) -> i32x4`                 | -                          |
-| `i32x4.reinterpret/f32x4(a: f32x4) -> i32x4`                 | -                          |
-| `i32x4.reinterpret/f64x2(a: f64x2) -> i32x4`                 | -                          |
-| `i32x4.build(x: i32[4]) -> i32x4`                            | `i32x4.build`              |
-| `i32x4.splat(x: i32) -> i32x4`                               | `i32x4.splat`              |
-| `i32x4.extractLane(a: i32x4, i: LaneIdx4) -> i32`            | `i32x4.extractLane`        |
-| `i32x4.replaceLane(a: i32x4, i: LaneIdx4, x: i32) -> i32x4`  | `i32x4.replaceLane`        |
-| `i32x4.select(s: b32x4, t: i32x4, f: i32x4) -> i32x4`        | `v32x4.select`             |
-| `i32x4.swizzle(a: i32x4, s: LaneIdx4[4]) -> i32x4`           | `v32x4.swizzle`            |
-| `i32x4.shuffle(a: i32x4, b: i32x4, s: LaneIdx8[4]) -> i32x4` | `v32x4.shuffle`            |
-| `i32x4.add(a: i32x4, b: i32x4) -> i32x4`                     | `i32x4.add`                |
-| `i32x4.sub(a: i32x4, b: i32x4) -> i32x4`                     | `i32x4.sub`                |
-| `i32x4.mul(a: i32x4, b: i32x4) -> i32x4`                     | `i32x4.mul`                |
-| `i32x4.neg(a: i32x4) -> i32x4`                               | `i32x4.neg`                |
-| `i32x4.shl(a: i32x4, y: i32) -> i32x4`                       | `i32x4.shiftLeftByScalar`  |
-| `i32x4.shr_s(a: i32x4, y: i32) -> i32x4`                     | `s32x4.shiftRightByScalar` |
-| `i32x4.shr_u(a: i32x4, y: i32) -> i32x4`                     | `u32x4.shiftRightByScalar` |
-| `i32x4.and(a: i32x4, b: i32x4) -> i32x4`                     | `v128.and`                 |
-| `i32x4.or(a: i32x4, b: i32x4) -> i32x4`                      | `v128.or`                  |
-| `i32x4.xor(a: i32x4, b: i32x4) -> i32x4`                     | `v128.xor`                 |
-| `i32x4.not(a: i32x4) -> i32x4`                               | `v128.not`                 |
-| `i32x4.eq(a: i32x4, b: i32x4) -> b32x4`                      | `i32x4.equal`              |
-| `i32x4.ne(a: i32x4, b: i32x4) -> b32x4`                      | `i32x4.notEqual`           |
-| `i32x4.lt_s(a: i32x4, b: i32x4) -> b32x4`                    | `s32x4.lessThan`           |
-| `i32x4.lt_u(a: i32x4, b: i32x4) -> b32x4`                    | `u32x4.lessThan`           |
-| `i32x4.le_s(a: i32x4, b: i32x4) -> b32x4`                    | `s32x4.lessThanOrEqual`    |
-| `i32x4.le_u(a: i32x4, b: i32x4) -> b32x4`                    | `u32x4.lessThanOrEqual`    |
-| `i32x4.gt_s(a: i32x4, b: i32x4) -> b32x4`                    | `s32x4.greaterThan`        |
-| `i32x4.gt_u(a: i32x4, b: i32x4) -> b32x4`                    | `u32x4.greaterThan`        |
-| `i32x4.ge_s(a: i32x4, b: i32x4) -> b32x4`                    | `s32x4.greaterThanOrEqual` |
-| `i32x4.ge_u(a: i32x4, b: i32x4) -> b32x4`                    | `u32x4.greaterThanOrEqual` |
-| `i32x4.load(mem: Buffer, addr: ByteOffset) -> i32x4`         | `v32x4.load`               |
-| `i32x4.store(mem: Buffer, addr: ByteOffset, data: i32x4)`    | `v32x4.store`              |
-| `i32x4.load1(mem: Buffer, addr: ByteOffset) -> i32x4`        | `v32x4.load1`              |
-| `i32x4.load2(mem: Buffer, addr: ByteOffset) -> i32x4`        | `v32x4.load2`              |
-| `i32x4.load3(mem: Buffer, addr: ByteOffset) -> i32x4`        | `v32x4.load3`              |
-| `i32x4.store1(mem: Buffer, addr: ByteOffset, data: i32x4)`   | `v32x4.store1`             |
-| `i32x4.store2(mem: Buffer, addr: ByteOffset, data: i32x4)`   | `v32x4.store2`             |
-| `i32x4.store3(mem: Buffer, addr: ByteOffset, data: i32x4)`   | `v32x4.store3`             |
-| `i32x4.trunc_s(a: f32x4) -> (result: f32x4, fail: i32)`      | `s32x4.fromFloat`          |
-| `i32x4.trunc_u(a: f32x4) -> (result: f32x4, fail: i32)`      | `u32x4.fromFloat`          |
+| WebAssembly                                                      | Portable SIMD              |
+|:-----------------------------------------------------------------|:---------------------------|
+| `i32x4.reinterpret/i8x16(a: i8x16) -> i32x4`                     | -                          |
+| `i32x4.reinterpret/i16x8(a: i16x8) -> i32x4`                     | -                          |
+| `i32x4.reinterpret/i64x2(a: i64x2) -> i32x4`                     | -                          |
+| `i32x4.reinterpret/f32x4(a: f32x4) -> i32x4`                     | -                          |
+| `i32x4.reinterpret/f64x2(a: f64x2) -> i32x4`                     | -                          |
+| `i32x4.build(x: i32[4]) -> i32x4`                                | `i32x4.build`              |
+| `i32x4.splat(x: i32) -> i32x4`                                   | `i32x4.splat`              |
+| `i32x4.extractLane(a: i32x4, i: LaneIdx4) -> i32`                | `i32x4.extractLane`        |
+| `i32x4.replaceLane(a: i32x4, i: LaneIdx4, x: i32) -> i32x4`      | `i32x4.replaceLane`        |
+| `i32x4.select(s: b32x4, t: i32x4, f: i32x4) -> i32x4`            | `v32x4.select`             |
+| `i32x4.swizzle(a: i32x4, s: LaneIdx4[4]) -> i32x4`               | `v32x4.swizzle`            |
+| `i32x4.shuffle(a: i32x4, b: i32x4, s: LaneIdx8[4]) -> i32x4`     | `v32x4.shuffle`            |
+| `i32x4.add(a: i32x4, b: i32x4) -> i32x4`                         | `i32x4.add`                |
+| `i32x4.sub(a: i32x4, b: i32x4) -> i32x4`                         | `i32x4.sub`                |
+| `i32x4.mul(a: i32x4, b: i32x4) -> i32x4`                         | `i32x4.mul`                |
+| `i32x4.neg(a: i32x4) -> i32x4`                                   | `i32x4.neg`                |
+| `i32x4.shl(a: i32x4, y: i32) -> i32x4`                           | `i32x4.shiftLeftByScalar`  |
+| `i32x4.shr_s(a: i32x4, y: i32) -> i32x4`                         | `s32x4.shiftRightByScalar` |
+| `i32x4.shr_u(a: i32x4, y: i32) -> i32x4`                         | `u32x4.shiftRightByScalar` |
+| `i32x4.and(a: i32x4, b: i32x4) -> i32x4`                         | `v128.and`                 |
+| `i32x4.or(a: i32x4, b: i32x4) -> i32x4`                          | `v128.or`                  |
+| `i32x4.xor(a: i32x4, b: i32x4) -> i32x4`                         | `v128.xor`                 |
+| `i32x4.not(a: i32x4) -> i32x4`                                   | `v128.not`                 |
+| `i32x4.eq(a: i32x4, b: i32x4) -> b32x4`                          | `i32x4.equal`              |
+| `i32x4.ne(a: i32x4, b: i32x4) -> b32x4`                          | `i32x4.notEqual`           |
+| `i32x4.lt_s(a: i32x4, b: i32x4) -> b32x4`                        | `s32x4.lessThan`           |
+| `i32x4.lt_u(a: i32x4, b: i32x4) -> b32x4`                        | `u32x4.lessThan`           |
+| `i32x4.le_s(a: i32x4, b: i32x4) -> b32x4`                        | `s32x4.lessThanOrEqual`    |
+| `i32x4.le_u(a: i32x4, b: i32x4) -> b32x4`                        | `u32x4.lessThanOrEqual`    |
+| `i32x4.gt_s(a: i32x4, b: i32x4) -> b32x4`                        | `s32x4.greaterThan`        |
+| `i32x4.gt_u(a: i32x4, b: i32x4) -> b32x4`                        | `u32x4.greaterThan`        |
+| `i32x4.ge_s(a: i32x4, b: i32x4) -> b32x4`                        | `s32x4.greaterThanOrEqual` |
+| `i32x4.ge_u(a: i32x4, b: i32x4) -> b32x4`                        | `u32x4.greaterThanOrEqual` |
+| `i32x4.load(mem: Buffer, addr: ByteOffset) -> i32x4`             | `v32x4.load`               |
+| `i32x4.store(mem: Buffer, addr: ByteOffset, data: i32x4)`        | `v32x4.store`              |
+| `i32x4.load1(mem: Buffer, addr: ByteOffset) -> i32x4`            | `v32x4.load1`              |
+| `i32x4.load2(mem: Buffer, addr: ByteOffset) -> i32x4`            | `v32x4.load2`              |
+| `i32x4.load3(mem: Buffer, addr: ByteOffset) -> i32x4`            | `v32x4.load3`              |
+| `i32x4.store1(mem: Buffer, addr: ByteOffset, data: i32x4)`       | `v32x4.store1`             |
+| `i32x4.store2(mem: Buffer, addr: ByteOffset, data: i32x4)`       | `v32x4.store2`             |
+| `i32x4.store3(mem: Buffer, addr: ByteOffset, data: i32x4)`       | `v32x4.store3`             |
+| `i32x4.trunc_s(a: f32x4) -> (result: f32x4, fail: i32) -> i32x4` | `s32x4.fromFloat`          |
+| `i32x4.trunc_u(a: f32x4) -> (result: f32x4, fail: i32) -> i32x4` | `u32x4.fromFloat`          |
 
 ## `i64x2` operations
-| WebAssembly                                                  | Portable SIMD              |
-|:-------------------------------------------------------------|:---------------------------|
-| `i64x2.reinterpret/i8x16(a: i8x16) -> i64x2`                 | -                          |
-| `i64x2.reinterpret/i16x8(a: i16x8) -> i64x2`                 | -                          |
-| `i64x2.reinterpret/i32x4(a: i32x4) -> i64x2`                 | -                          |
-| `i64x2.reinterpret/f32x4(a: f32x4) -> i64x2`                 | -                          |
-| `i64x2.reinterpret/f64x2(a: f64x2) -> i64x2`                 | -                          |
-| `i64x2.build(x: i64[2]) -> i64x2`                            | `i64x2.build`              |
-| `i64x2.splat(x: i64) -> i64x2`                               | `i64x2.splat`              |
-| `i64x2.extractLane(a: i64x2, i: LaneIdx2) -> i64`            | `i64x2.extractLane`        |
-| `i64x2.replaceLane(a: i64x2, i: LaneIdx2, x: i64) -> i64x2`  | `i64x2.replaceLane`        |
-| `i64x2.select(s: b64x2, t: i64x2, f: i64x2) -> i64x2`        | `v64x2.select`             |
-| `i64x2.swizzle(a: i64x2, s: LaneIdx2[2]) -> i64x2`           | `v64x2.swizzle`            |
-| `i64x2.shuffle(a: i64x2, b: i64x2, s: LaneIdx4[2]) -> i64x2` | `v64x2.shuffle`            |
-| `i64x2.add(a: i64x2, b: i64x2) -> i64x2`                     | `i64x2.add`                |
-| `i64x2.sub(a: i64x2, b: i64x2) -> i64x2`                     | `i64x2.sub`                |
-| `i64x2.mul(a: i64x2, b: i64x2) -> i64x2`                     | `i64x2.mul`                |
-| `i64x2.neg(a: i64x2) -> i64x2`                               | `i64x2.neg`                |
-| `i64x2.shl(a: i64x2, y: i32) -> i64x2`                       | `i64x2.shiftLeftByScalar`  |
-| `i64x2.shr_s(a: i64x2, y: i32) -> i64x2`                     | `s64x2.shiftRightByScalar` |
-| `i64x2.shr_u(a: i64x2, y: i32) -> i64x2`                     | `u64x2.shiftRightByScalar` |
-| `i64x2.and(a: i64x2, b: i64x2) -> i64x2`                     | `v128.and`                 |
-| `i64x2.or(a: i64x2, b: i64x2) -> i64x2`                      | `v128.or`                  |
-| `i64x2.xor(a: i64x2, b: i64x2) -> i64x2`                     | `v128.xor`                 |
-| `i64x2.not(a: i64x2) -> i64x2`                               | `v128.not`                 |
-| `i64x2.eq(a: i64x2, b: i64x2) -> b64x2`                      | `i64x2.equal`              |
-| `i64x2.ne(a: i64x2, b: i64x2) -> b64x2`                      | `i64x2.notEqual`           |
-| `i64x2.lt_s(a: i64x2, b: i64x2) -> b64x2`                    | `s64x2.lessThan`           |
-| `i64x2.lt_u(a: i64x2, b: i64x2) -> b64x2`                    | `u64x2.lessThan`           |
-| `i64x2.le_s(a: i64x2, b: i64x2) -> b64x2`                    | `s64x2.lessThanOrEqual`    |
-| `i64x2.le_u(a: i64x2, b: i64x2) -> b64x2`                    | `u64x2.lessThanOrEqual`    |
-| `i64x2.gt_s(a: i64x2, b: i64x2) -> b64x2`                    | `s64x2.greaterThan`        |
-| `i64x2.gt_u(a: i64x2, b: i64x2) -> b64x2`                    | `u64x2.greaterThan`        |
-| `i64x2.ge_s(a: i64x2, b: i64x2) -> b64x2`                    | `s64x2.greaterThanOrEqual` |
-| `i64x2.ge_u(a: i64x2, b: i64x2) -> b64x2`                    | `u64x2.greaterThanOrEqual` |
-| `i64x2.load(mem: Buffer, addr: ByteOffset) -> i64x2`         | `v64x2.load`               |
-| `i64x2.store(mem: Buffer, addr: ByteOffset, data: i64x2)`    | `v64x2.store`              |
-| `i64x2.trunc_s(a: f64x2) -> (result: f64x2, fail: i32)`      | `s64x2.fromFloat`          |
-| `i64x2.trunc_u(a: f64x2) -> (result: f64x2, fail: i32)`      | `u64x2.fromFloat`          |
+| WebAssembly                                                      | Portable SIMD              |
+|:-----------------------------------------------------------------|:---------------------------|
+| `i64x2.reinterpret/i8x16(a: i8x16) -> i64x2`                     | -                          |
+| `i64x2.reinterpret/i16x8(a: i16x8) -> i64x2`                     | -                          |
+| `i64x2.reinterpret/i32x4(a: i32x4) -> i64x2`                     | -                          |
+| `i64x2.reinterpret/f32x4(a: f32x4) -> i64x2`                     | -                          |
+| `i64x2.reinterpret/f64x2(a: f64x2) -> i64x2`                     | -                          |
+| `i64x2.build(x: i64[2]) -> i64x2`                                | `i64x2.build`              |
+| `i64x2.splat(x: i64) -> i64x2`                                   | `i64x2.splat`              |
+| `i64x2.extractLane(a: i64x2, i: LaneIdx2) -> i64`                | `i64x2.extractLane`        |
+| `i64x2.replaceLane(a: i64x2, i: LaneIdx2, x: i64) -> i64x2`      | `i64x2.replaceLane`        |
+| `i64x2.select(s: b64x2, t: i64x2, f: i64x2) -> i64x2`            | `v64x2.select`             |
+| `i64x2.swizzle(a: i64x2, s: LaneIdx2[2]) -> i64x2`               | `v64x2.swizzle`            |
+| `i64x2.shuffle(a: i64x2, b: i64x2, s: LaneIdx4[2]) -> i64x2`     | `v64x2.shuffle`            |
+| `i64x2.add(a: i64x2, b: i64x2) -> i64x2`                         | `i64x2.add`                |
+| `i64x2.sub(a: i64x2, b: i64x2) -> i64x2`                         | `i64x2.sub`                |
+| `i64x2.mul(a: i64x2, b: i64x2) -> i64x2`                         | `i64x2.mul`                |
+| `i64x2.neg(a: i64x2) -> i64x2`                                   | `i64x2.neg`                |
+| `i64x2.shl(a: i64x2, y: i32) -> i64x2`                           | `i64x2.shiftLeftByScalar`  |
+| `i64x2.shr_s(a: i64x2, y: i32) -> i64x2`                         | `s64x2.shiftRightByScalar` |
+| `i64x2.shr_u(a: i64x2, y: i32) -> i64x2`                         | `u64x2.shiftRightByScalar` |
+| `i64x2.and(a: i64x2, b: i64x2) -> i64x2`                         | `v128.and`                 |
+| `i64x2.or(a: i64x2, b: i64x2) -> i64x2`                          | `v128.or`                  |
+| `i64x2.xor(a: i64x2, b: i64x2) -> i64x2`                         | `v128.xor`                 |
+| `i64x2.not(a: i64x2) -> i64x2`                                   | `v128.not`                 |
+| `i64x2.eq(a: i64x2, b: i64x2) -> b64x2`                          | `i64x2.equal`              |
+| `i64x2.ne(a: i64x2, b: i64x2) -> b64x2`                          | `i64x2.notEqual`           |
+| `i64x2.lt_s(a: i64x2, b: i64x2) -> b64x2`                        | `s64x2.lessThan`           |
+| `i64x2.lt_u(a: i64x2, b: i64x2) -> b64x2`                        | `u64x2.lessThan`           |
+| `i64x2.le_s(a: i64x2, b: i64x2) -> b64x2`                        | `s64x2.lessThanOrEqual`    |
+| `i64x2.le_u(a: i64x2, b: i64x2) -> b64x2`                        | `u64x2.lessThanOrEqual`    |
+| `i64x2.gt_s(a: i64x2, b: i64x2) -> b64x2`                        | `s64x2.greaterThan`        |
+| `i64x2.gt_u(a: i64x2, b: i64x2) -> b64x2`                        | `u64x2.greaterThan`        |
+| `i64x2.ge_s(a: i64x2, b: i64x2) -> b64x2`                        | `s64x2.greaterThanOrEqual` |
+| `i64x2.ge_u(a: i64x2, b: i64x2) -> b64x2`                        | `u64x2.greaterThanOrEqual` |
+| `i64x2.load(mem: Buffer, addr: ByteOffset) -> i64x2`             | `v64x2.load`               |
+| `i64x2.store(mem: Buffer, addr: ByteOffset, data: i64x2)`        | `v64x2.store`              |
+| `i64x2.trunc_s(a: f64x2) -> (result: f64x2, fail: i32) -> i64x2` | `s64x2.fromFloat`          |
+| `i64x2.trunc_u(a: f64x2) -> (result: f64x2, fail: i32) -> i64x2` | `u64x2.fromFloat`          |
 
 ## `f32x4` operations
 | WebAssembly                                                   | Portable SIMD                       |
