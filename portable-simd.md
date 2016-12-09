@@ -18,7 +18,7 @@ unsigned integers.
 
 * `i8`: An 8-bit integer with bits numbered 0–7.
 * `i16`: A 16-bit integer with bits numbered 0–15.
-* `i32`: A 32-bit integer with bits numbered 0–32.
+* `i32`: A 32-bit integer with bits numbered 0–31.
 * `i64`: A 64-bit integer with bits numbered 0–63.
 
 The concrete scalar floating-point types follow the encoding and semantics of
