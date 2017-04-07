@@ -106,6 +106,22 @@ trap, same as the scalar WebAssembly conversions:
 ## Memory operations
 
 The load and store operations use the same addressing and bounds checking as the
-scalar WebAssembly memory instructions. All the numerical types support the
-`load` and `store` instructions, while the partial operations are only supported
-by the 32x4 types.
+scalar WebAssembly memory instructions, and effective addresses are provided in
+the same way by a dynamic address and an immediate offset operand.
+
+Since WebAssembly is always little-endian, the `load` and `store` instructions
+are not dependent on the lane-wise interpretation of the vector being loaded or
+stored. This means that there are only two instructions:
+
+* `v128.load(addr, offset) -> v128`
+* `v128.store(addr, offset, data: v128)`
+
+The partial vector load/store instructions are specific to the 4-lane
+interpretation:
+
+* `v32x4.load1(addr, offset) -> v128`
+* `v32x4.load2(addr, offset) -> v128`
+* `v32x4.load3(addr, offset) -> v128`
+* `v32x4.store1(addr, offset, data: v128)`
+* `v32x4.store2(addr, offset, data: v128)`
+* `v32x4.store3(addr, offset, data: v128)`

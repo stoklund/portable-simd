@@ -17,12 +17,14 @@ and output vectors.
 | [v64x2](#v64x2-operations) | [i64x2](#i64x2-operations) | [f64x2](#f64x2-operations) | [b64x2](#b64x2-operations) |
 
 ## `v128` operations
-| WebAssembly                          | Portable SIMD |
-|:-------------------------------------|:--------------|
-| `v128.and(a: v128, b: v128) -> v128` | [v128.and](portable-simd.md#bitwise-operations) |
-| `v128.or(a: v128, b: v128) -> v128`  | [v128.or](portable-simd.md#bitwise-operations) |
-| `v128.xor(a: v128, b: v128) -> v128` | [v128.xor](portable-simd.md#bitwise-operations) |
-| `v128.not(a: v128) -> v128`          | [v128.not](portable-simd.md#bitwise-operations) |
+| WebAssembly                            | Portable SIMD |
+|:---------------------------------------|:--------------|
+| `v128.and(a: v128, b: v128) -> v128`   | [v128.and](portable-simd.md#bitwise-operations) |
+| `v128.or(a: v128, b: v128) -> v128`    | [v128.or](portable-simd.md#bitwise-operations) |
+| `v128.xor(a: v128, b: v128) -> v128`   | [v128.xor](portable-simd.md#bitwise-operations) |
+| `v128.not(a: v128) -> v128`            | [v128.not](portable-simd.md#bitwise-operations) |
+| `v128.load(addr, offset) -> v128`      | [v128.load](portable-simd.md#load) |
+| `v128.store(addr, offset, data: v128)` | [v128.store](portable-simd.md#store) |
 
 ## `v8x16` operations
 | WebAssembly                                                 | Portable SIMD |
@@ -30,8 +32,6 @@ and output vectors.
 | `v8x16.select(s: b8x16, t: v128, f: v128) -> v128`          | [v8x16.select](portable-simd.md#lane-wise-select) |
 | `v8x16.swizzle(a: v128, s: LaneIdx16[16]) -> v128`          | [v8x16.swizzle](portable-simd.md#swizzle-lanes) |
 | `v8x16.shuffle(a: v128, b: v128, s: LaneIdx32[16]) -> v128` | [v8x16.shuffle](portable-simd.md#shuffle-lanes) |
-| `v8x16.load(mem: Buffer, addr: ByteOffset) -> v128`         | [v8x16.load](portable-simd.md#load) |
-| `v8x16.store(mem: Buffer, addr: ByteOffset, data: v128)`    | [v8x16.store](portable-simd.md#store) |
 
 ## `i8x16` operations
 | WebAssembly                                                | Portable SIMD |
@@ -69,8 +69,6 @@ and output vectors.
 | `v16x8.select(s: b16x8, t: v128, f: v128) -> v128`         | [v16x8.select](portable-simd.md#lane-wise-select) |
 | `v16x8.swizzle(a: v128, s: LaneIdx8[8]) -> v128`           | [v16x8.swizzle](portable-simd.md#swizzle-lanes) |
 | `v16x8.shuffle(a: v128, b: v128, s: LaneIdx16[8]) -> v128` | [v16x8.shuffle](portable-simd.md#shuffle-lanes) |
-| `v16x8.load(mem: Buffer, addr: ByteOffset) -> v128`        | [v16x8.load](portable-simd.md#load) |
-| `v16x8.store(mem: Buffer, addr: ByteOffset, data: v128)`   | [v16x8.store](portable-simd.md#store) |
 
 ## `i16x8` operations
 | WebAssembly                                               | Portable SIMD |
@@ -108,14 +106,12 @@ and output vectors.
 | `v32x4.select(s: b32x4, t: v128, f: v128) -> v128`        | [v32x4.select](portable-simd.md#lane-wise-select) |
 | `v32x4.swizzle(a: v128, s: LaneIdx4[4]) -> v128`          | [v32x4.swizzle](portable-simd.md#swizzle-lanes) |
 | `v32x4.shuffle(a: v128, b: v128, s: LaneIdx8[4]) -> v128` | [v32x4.shuffle](portable-simd.md#shuffle-lanes) |
-| `v32x4.load(mem: Buffer, addr: ByteOffset) -> v128`       | [v32x4.load](portable-simd.md#load) |
-| `v32x4.store(mem: Buffer, addr: ByteOffset, data: v128)`  | [v32x4.store](portable-simd.md#store) |
-| `v32x4.load1(mem: Buffer, addr: ByteOffset) -> v128`      | [v32x4.load1](portable-simd.md#partial-load) |
-| `v32x4.load2(mem: Buffer, addr: ByteOffset) -> v128`      | [v32x4.load2](portable-simd.md#partial-load) |
-| `v32x4.load3(mem: Buffer, addr: ByteOffset) -> v128`      | [v32x4.load3](portable-simd.md#partial-load) |
-| `v32x4.store1(mem: Buffer, addr: ByteOffset, data: v128)` | [v32x4.store1](portable-simd.md#partial-store) |
-| `v32x4.store2(mem: Buffer, addr: ByteOffset, data: v128)` | [v32x4.store2](portable-simd.md#partial-store) |
-| `v32x4.store3(mem: Buffer, addr: ByteOffset, data: v128)` | [v32x4.store3](portable-simd.md#partial-store) |
+| `v32x4.load1(addr, offset) -> v128`                       | [v32x4.load1](portable-simd.md#partial-load) |
+| `v32x4.load2(addr, offset) -> v128`                       | [v32x4.load2](portable-simd.md#partial-load) |
+| `v32x4.load3(addr, offset) -> v128`                       | [v32x4.load3](portable-simd.md#partial-load) |
+| `v32x4.store1(addr, offset, data: v128)`                  | [v32x4.store1](portable-simd.md#partial-store) |
+| `v32x4.store2(addr, offset, data: v128)`                  | [v32x4.store2](portable-simd.md#partial-store) |
+| `v32x4.store3(addr, offset, data: v128)`                  | [v32x4.store3](portable-simd.md#partial-store) |
 
 ## `i32x4` operations
 | WebAssembly                                               | Portable SIMD |
@@ -177,8 +173,6 @@ and output vectors.
 | `v64x2.select(s: b64x2, t: v128, f: v128) -> v128`        | [v64x2.select](portable-simd.md#lane-wise-select) |
 | `v64x2.swizzle(a: v128, s: LaneIdx2[2]) -> v128`          | [v64x2.swizzle](portable-simd.md#swizzle-lanes) |
 | `v64x2.shuffle(a: v128, b: v128, s: LaneIdx4[2]) -> v128` | [v64x2.shuffle](portable-simd.md#shuffle-lanes) |
-| `v64x2.load(mem: Buffer, addr: ByteOffset) -> v128`       | [v64x2.load](portable-simd.md#load) |
-| `v64x2.store(mem: Buffer, addr: ByteOffset, data: v128)`  | [v64x2.store](portable-simd.md#store) |
 
 ## `i64x2` operations
 | WebAssembly                                               | Portable SIMD |

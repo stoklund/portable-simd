@@ -10,6 +10,19 @@ spec = simdspec.Specification()
 with open('portable-simd.md') as f:
     spec.parse(f.read())
 
+
+# Add load and store operations directly to `v128`.
+def add_v128_load_store() -> None:
+    v128 = spec.interpretations_byname['v128']
+    v32x4 = spec.interpretations_byname['v32x4']
+
+    for opname in ('load', 'store'):
+        op = spec.get_operation(opname)
+        prev = op.signatures[v32x4]
+        op.add_signature(v128, simdspec.Signature(
+            v128, op, prev.args, prev.result, prev.anchor))
+
+
 print('''
 # WebAssembly SIMD operations
 
@@ -70,6 +83,10 @@ def format_sig(
         sig: simdspec.Signature,
         ) -> str:
     args = re.sub(r'\b(i8|i16|boolean)\b', 'i32', sig.args)
+    # General rewrite of load/store address arguments.
+    args = args.replace(
+            'mem: Buffer, addr: ByteOffset',
+            'addr, offset')
     if sig.result is None:
         return '{}({})'.format(name, args)
     else:
@@ -89,6 +106,11 @@ def wasm_sigs(
         # These operations are not mapped to WebAssembly.
         if op.name in ('minNum', 'maxNum'):
             continue
+        # Skip the geometry-specific load/store operations. We use a single
+        # `v128` definition instead.
+        if it.parent and op.name in ('load', 'store'):
+            continue
+
         op_name = '{}.{}'.format(it.name, name_map.get(op.name, op.name))
         op_it = op.get_definition(it)
         if op_it == it:
@@ -123,6 +145,7 @@ def wasm_sigs(
                     yield (wsig, sig)
 
 
+add_v128_load_store()
 print_toc()
 for it in wasm:
     print('')
