@@ -168,7 +168,7 @@ class Specification(object):
         for m in re.finditer(
                 r'^#+\s*(.*)|' +
                 r'^\* `(?P<it>[visufb][0-9x]+)\.' +
-                r'(?P<op>\w+)\((?P<args>.*)\)\s*(->\s*(?P<res>.*))?`', text,
+                r'(?P<op>\w+)\((?P<args>[^)]*)\)\s*(->\s*(?P<res>.*))?`', text,
                 re.MULTILINE):
             if m.group(0).startswith('#'):
                 # This is a section header.

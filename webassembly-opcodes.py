@@ -28,8 +28,8 @@ wasm = [it for it in spec.interpretations_pre()
 # Begin with a table of links to the interpretations, except for `v128`.
 def print_toc() -> None:
     print('''
-The SIMD operations are grouped according to their interpretation of the input
-vectors.
+The SIMD operations are grouped according to the interpretation of the input
+and output vectors.
 
 | Shape | Int | Float | Bool |
 |:-----:|:---:|:-----:|:----:|''')
@@ -94,6 +94,9 @@ def wasm_sigs(
         if op_it == it:
             # This operation has a definition for `it`.
             sig = op.signatures[op_it]
+            # Append input argument types: `convert_s/i32x4`
+            if op.name in ('fromSignedInt', 'fromUnsignedInt'):
+                op_name += '/i' + it.name[1:]
             # Create s/u variants for functions that have i8/i16 results.
             if sig.result in ('i8', 'i16'):
                 sig = sig.with_result('i32')
@@ -110,9 +113,12 @@ def wasm_sigs(
                     if op.name in ('fromFloat',):
                         # Replace the (result, fail) result tuple.
                         # This operation traps in wasm.
-                        sig = sig.with_result(it.name)
-                    # Create a '_s' or _u suffixed opcode.
-                    suffixed = '{}_{}'.format(op_name, ch_it.name[0])
+                        sig = sig.with_result('v128')
+                        suffixed = '{}_{}/f{}'.format(
+                                op_name, ch_it.name[0], it.name[1:])
+                    else:
+                        # Create a '_s' or _u suffixed opcode.
+                        suffixed = '{}_{}'.format(op_name, ch_it.name[0])
                     wsig = format_sig(suffixed, sig)
                     yield (wsig, sig)
 

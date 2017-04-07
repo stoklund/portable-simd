@@ -6,8 +6,8 @@ specification](portable-simd.md) using [the WebAssembly
 mapping](webassembly-mapping.md).
 
 
-The SIMD operations are grouped according to their interpretation of the input
-vectors.
+The SIMD operations are grouped according to the interpretation of the input
+and output vectors.
 
 | Shape | Int | Float | Bool |
 |:-----:|:---:|:-----:|:----:|
@@ -118,58 +118,58 @@ vectors.
 | `v32x4.store3(mem: Buffer, addr: ByteOffset, data: v128)` | [v32x4.store3](portable-simd.md#partial-store) |
 
 ## `i32x4` operations
-| WebAssembly                                                    | Portable SIMD |
-|:---------------------------------------------------------------|:--------------|
-| `i32x4.build(x: i32[4]) -> v128`                               | [i32x4.build](portable-simd.md#build-vector-from-individual-lanes) |
-| `i32x4.splat(x: i32) -> v128`                                  | [i32x4.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `i32x4.extractLane(a: v128, i: LaneIdx4) -> i32`               | [i32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i32x4.replaceLane(a: v128, i: LaneIdx4, x: i32) -> v128`      | [i32x4.replaceLane](portable-simd.md#replace-lane-value) |
-| `i32x4.add(a: v128, b: v128) -> v128`                          | [i32x4.add](portable-simd.md#integer-addition) |
-| `i32x4.sub(a: v128, b: v128) -> v128`                          | [i32x4.sub](portable-simd.md#integer-subtraction) |
-| `i32x4.mul(a: v128, b: v128) -> v128`                          | [i32x4.mul](portable-simd.md#integer-multiplication) |
-| `i32x4.neg(a: v128) -> v128`                                   | [i32x4.neg](portable-simd.md#integer-negation) |
-| `i32x4.shl(a: v128, y: i32) -> v128`                           | [i32x4.shiftLeftByScalar](portable-simd.md#left-shift-by-scalar) |
-| `i32x4.shr_s(a: v128, y: i32) -> v128`                         | [s32x4.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
-| `i32x4.shr_u(a: v128, y: i32) -> v128`                         | [u32x4.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
-| `i32x4.eq(a: v128, b: v128) -> b32x4`                          | [i32x4.equal](portable-simd.md#equality) |
-| `i32x4.ne(a: v128, b: v128) -> b32x4`                          | [i32x4.notEqual](portable-simd.md#non-equality) |
-| `i32x4.lt_s(a: v128, b: v128) -> b32x4`                        | [s32x4.lessThan](portable-simd.md#less-than) |
-| `i32x4.lt_u(a: v128, b: v128) -> b32x4`                        | [u32x4.lessThan](portable-simd.md#less-than) |
-| `i32x4.le_s(a: v128, b: v128) -> b32x4`                        | [s32x4.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
-| `i32x4.le_u(a: v128, b: v128) -> b32x4`                        | [u32x4.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
-| `i32x4.gt_s(a: v128, b: v128) -> b32x4`                        | [s32x4.greaterThan](portable-simd.md#greater-than) |
-| `i32x4.gt_u(a: v128, b: v128) -> b32x4`                        | [u32x4.greaterThan](portable-simd.md#greater-than) |
-| `i32x4.ge_s(a: v128, b: v128) -> b32x4`                        | [s32x4.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
-| `i32x4.ge_u(a: v128, b: v128) -> b32x4`                        | [u32x4.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
-| `i32x4.trunc_s(a: v128) -> (result: v128, fail: i32) -> i32x4` | [s32x4.fromFloat](portable-simd.md#floating-point-to-integer) |
-| `i32x4.trunc_u(a: v128) -> (result: v128, fail: i32) -> i32x4` | [u32x4.fromFloat](portable-simd.md#floating-point-to-integer) |
+| WebAssembly                                               | Portable SIMD |
+|:----------------------------------------------------------|:--------------|
+| `i32x4.build(x: i32[4]) -> v128`                          | [i32x4.build](portable-simd.md#build-vector-from-individual-lanes) |
+| `i32x4.splat(x: i32) -> v128`                             | [i32x4.splat](portable-simd.md#create-vector-with-identical-lanes) |
+| `i32x4.extractLane(a: v128, i: LaneIdx4) -> i32`          | [i32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i32x4.replaceLane(a: v128, i: LaneIdx4, x: i32) -> v128` | [i32x4.replaceLane](portable-simd.md#replace-lane-value) |
+| `i32x4.add(a: v128, b: v128) -> v128`                     | [i32x4.add](portable-simd.md#integer-addition) |
+| `i32x4.sub(a: v128, b: v128) -> v128`                     | [i32x4.sub](portable-simd.md#integer-subtraction) |
+| `i32x4.mul(a: v128, b: v128) -> v128`                     | [i32x4.mul](portable-simd.md#integer-multiplication) |
+| `i32x4.neg(a: v128) -> v128`                              | [i32x4.neg](portable-simd.md#integer-negation) |
+| `i32x4.shl(a: v128, y: i32) -> v128`                      | [i32x4.shiftLeftByScalar](portable-simd.md#left-shift-by-scalar) |
+| `i32x4.shr_s(a: v128, y: i32) -> v128`                    | [s32x4.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
+| `i32x4.shr_u(a: v128, y: i32) -> v128`                    | [u32x4.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
+| `i32x4.eq(a: v128, b: v128) -> b32x4`                     | [i32x4.equal](portable-simd.md#equality) |
+| `i32x4.ne(a: v128, b: v128) -> b32x4`                     | [i32x4.notEqual](portable-simd.md#non-equality) |
+| `i32x4.lt_s(a: v128, b: v128) -> b32x4`                   | [s32x4.lessThan](portable-simd.md#less-than) |
+| `i32x4.lt_u(a: v128, b: v128) -> b32x4`                   | [u32x4.lessThan](portable-simd.md#less-than) |
+| `i32x4.le_s(a: v128, b: v128) -> b32x4`                   | [s32x4.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
+| `i32x4.le_u(a: v128, b: v128) -> b32x4`                   | [u32x4.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
+| `i32x4.gt_s(a: v128, b: v128) -> b32x4`                   | [s32x4.greaterThan](portable-simd.md#greater-than) |
+| `i32x4.gt_u(a: v128, b: v128) -> b32x4`                   | [u32x4.greaterThan](portable-simd.md#greater-than) |
+| `i32x4.ge_s(a: v128, b: v128) -> b32x4`                   | [s32x4.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
+| `i32x4.ge_u(a: v128, b: v128) -> b32x4`                   | [u32x4.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
+| `i32x4.trunc_s/f32x4(a: v128) -> v128`                    | [s32x4.fromFloat](portable-simd.md#floating-point-to-integer) |
+| `i32x4.trunc_u/f32x4(a: v128) -> v128`                    | [u32x4.fromFloat](portable-simd.md#floating-point-to-integer) |
 
 ## `f32x4` operations
-| WebAssembly                                                | Portable SIMD |
-|:-----------------------------------------------------------|:--------------|
-| `f32x4.build(x: f32[4]) -> v128`                           | [f32x4.build](portable-simd.md#build-vector-from-individual-lanes) |
-| `f32x4.splat(x: f32) -> v128`                              | [f32x4.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `f32x4.extractLane(a: v128, i: LaneIdx4) -> f32`           | [f32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `f32x4.replaceLane(a: v128, i: LaneIdx4, x: f32) -> v128`  | [f32x4.replaceLane](portable-simd.md#replace-lane-value) |
-| `f32x4.add(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f32x4.add](portable-simd.md#addition) |
-| `f32x4.sub(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f32x4.sub](portable-simd.md#subtraction) |
-| `f32x4.mul(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f32x4.mul](portable-simd.md#multiplication) |
-| `f32x4.neg(a: v128) -> v128`                               | [f32x4.neg](portable-simd.md#negation) |
-| `f32x4.eq(a: v128, b: v128) -> b32x4`                      | [f32x4.equal](portable-simd.md#equality) |
-| `f32x4.ne(a: v128, b: v128) -> b32x4`                      | [f32x4.notEqual](portable-simd.md#non-equality) |
-| `f32x4.lt(a: v128, b: v128) -> b32x4`                      | [f32x4.lessThan](portable-simd.md#less-than) |
-| `f32x4.le(a: v128, b: v128) -> b32x4`                      | [f32x4.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
-| `f32x4.gt(a: v128, b: v128) -> b32x4`                      | [f32x4.greaterThan](portable-simd.md#greater-than) |
-| `f32x4.ge(a: v128, b: v128) -> b32x4`                      | [f32x4.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
-| `f32x4.abs(a: v128) -> v128`                               | [f32x4.abs](portable-simd.md#absolute-value) |
-| `f32x4.min(a: v128, b: v128) -> v128`                      | [f32x4.min](portable-simd.md#nan-propagating-minimum) |
-| `f32x4.max(a: v128, b: v128) -> v128`                      | [f32x4.max](portable-simd.md#nan-propagating-maximum) |
-| `f32x4.div(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f32x4.div](portable-simd.md#division) |
-| `f32x4.sqrt(a: v128, rmode: RoundingMode) -> v128`         | [f32x4.sqrt](portable-simd.md#square-root) |
-| `f32x4.reciprocalApproximation(a: v128) -> v128`           | [f32x4.reciprocalApproximation](portable-simd.md#reciprocal-approximation) |
-| `f32x4.reciprocalSqrtApproximation(a: v128) -> v128`       | [f32x4.reciprocalSqrtApproximation](portable-simd.md#reciprocal-square-root-approximation) |
-| `f32x4.convert_s(a: v128, rmode: RoundingMode) -> v128`    | [f32x4.fromSignedInt](portable-simd.md#integer-to-floating-point) |
-| `f32x4.convert_u(a: v128, rmode: RoundingMode) -> v128`    | [f32x4.fromUnsignedInt](portable-simd.md#integer-to-floating-point) |
+| WebAssembly                                                   | Portable SIMD |
+|:--------------------------------------------------------------|:--------------|
+| `f32x4.build(x: f32[4]) -> v128`                              | [f32x4.build](portable-simd.md#build-vector-from-individual-lanes) |
+| `f32x4.splat(x: f32) -> v128`                                 | [f32x4.splat](portable-simd.md#create-vector-with-identical-lanes) |
+| `f32x4.extractLane(a: v128, i: LaneIdx4) -> f32`              | [f32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `f32x4.replaceLane(a: v128, i: LaneIdx4, x: f32) -> v128`     | [f32x4.replaceLane](portable-simd.md#replace-lane-value) |
+| `f32x4.add(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f32x4.add](portable-simd.md#addition) |
+| `f32x4.sub(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f32x4.sub](portable-simd.md#subtraction) |
+| `f32x4.mul(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f32x4.mul](portable-simd.md#multiplication) |
+| `f32x4.neg(a: v128) -> v128`                                  | [f32x4.neg](portable-simd.md#negation) |
+| `f32x4.eq(a: v128, b: v128) -> b32x4`                         | [f32x4.equal](portable-simd.md#equality) |
+| `f32x4.ne(a: v128, b: v128) -> b32x4`                         | [f32x4.notEqual](portable-simd.md#non-equality) |
+| `f32x4.lt(a: v128, b: v128) -> b32x4`                         | [f32x4.lessThan](portable-simd.md#less-than) |
+| `f32x4.le(a: v128, b: v128) -> b32x4`                         | [f32x4.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
+| `f32x4.gt(a: v128, b: v128) -> b32x4`                         | [f32x4.greaterThan](portable-simd.md#greater-than) |
+| `f32x4.ge(a: v128, b: v128) -> b32x4`                         | [f32x4.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
+| `f32x4.abs(a: v128) -> v128`                                  | [f32x4.abs](portable-simd.md#absolute-value) |
+| `f32x4.min(a: v128, b: v128) -> v128`                         | [f32x4.min](portable-simd.md#nan-propagating-minimum) |
+| `f32x4.max(a: v128, b: v128) -> v128`                         | [f32x4.max](portable-simd.md#nan-propagating-maximum) |
+| `f32x4.div(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f32x4.div](portable-simd.md#division) |
+| `f32x4.sqrt(a: v128, rmode: RoundingMode) -> v128`            | [f32x4.sqrt](portable-simd.md#square-root) |
+| `f32x4.reciprocalApproximation(a: v128) -> v128`              | [f32x4.reciprocalApproximation](portable-simd.md#reciprocal-approximation) |
+| `f32x4.reciprocalSqrtApproximation(a: v128) -> v128`          | [f32x4.reciprocalSqrtApproximation](portable-simd.md#reciprocal-square-root-approximation) |
+| `f32x4.convert_s/i32x4(a: v128, rmode: RoundingMode) -> v128` | [f32x4.fromSignedInt](portable-simd.md#integer-to-floating-point) |
+| `f32x4.convert_u/i32x4(a: v128, rmode: RoundingMode) -> v128` | [f32x4.fromUnsignedInt](portable-simd.md#integer-to-floating-point) |
 
 ## `v64x2` operations
 | WebAssembly                                               | Portable SIMD |
@@ -181,58 +181,58 @@ vectors.
 | `v64x2.store(mem: Buffer, addr: ByteOffset, data: v128)`  | [v64x2.store](portable-simd.md#store) |
 
 ## `i64x2` operations
-| WebAssembly                                                    | Portable SIMD |
-|:---------------------------------------------------------------|:--------------|
-| `i64x2.build(x: i64[2]) -> v128`                               | [i64x2.build](portable-simd.md#build-vector-from-individual-lanes) |
-| `i64x2.splat(x: i64) -> v128`                                  | [i64x2.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `i64x2.extractLane(a: v128, i: LaneIdx2) -> i64`               | [i64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i64x2.replaceLane(a: v128, i: LaneIdx2, x: i64) -> v128`      | [i64x2.replaceLane](portable-simd.md#replace-lane-value) |
-| `i64x2.add(a: v128, b: v128) -> v128`                          | [i64x2.add](portable-simd.md#integer-addition) |
-| `i64x2.sub(a: v128, b: v128) -> v128`                          | [i64x2.sub](portable-simd.md#integer-subtraction) |
-| `i64x2.mul(a: v128, b: v128) -> v128`                          | [i64x2.mul](portable-simd.md#integer-multiplication) |
-| `i64x2.neg(a: v128) -> v128`                                   | [i64x2.neg](portable-simd.md#integer-negation) |
-| `i64x2.shl(a: v128, y: i32) -> v128`                           | [i64x2.shiftLeftByScalar](portable-simd.md#left-shift-by-scalar) |
-| `i64x2.shr_s(a: v128, y: i32) -> v128`                         | [s64x2.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
-| `i64x2.shr_u(a: v128, y: i32) -> v128`                         | [u64x2.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
-| `i64x2.eq(a: v128, b: v128) -> b64x2`                          | [i64x2.equal](portable-simd.md#equality) |
-| `i64x2.ne(a: v128, b: v128) -> b64x2`                          | [i64x2.notEqual](portable-simd.md#non-equality) |
-| `i64x2.lt_s(a: v128, b: v128) -> b64x2`                        | [s64x2.lessThan](portable-simd.md#less-than) |
-| `i64x2.lt_u(a: v128, b: v128) -> b64x2`                        | [u64x2.lessThan](portable-simd.md#less-than) |
-| `i64x2.le_s(a: v128, b: v128) -> b64x2`                        | [s64x2.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
-| `i64x2.le_u(a: v128, b: v128) -> b64x2`                        | [u64x2.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
-| `i64x2.gt_s(a: v128, b: v128) -> b64x2`                        | [s64x2.greaterThan](portable-simd.md#greater-than) |
-| `i64x2.gt_u(a: v128, b: v128) -> b64x2`                        | [u64x2.greaterThan](portable-simd.md#greater-than) |
-| `i64x2.ge_s(a: v128, b: v128) -> b64x2`                        | [s64x2.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
-| `i64x2.ge_u(a: v128, b: v128) -> b64x2`                        | [u64x2.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
-| `i64x2.trunc_s(a: v128) -> (result: v128, fail: i32) -> i64x2` | [s64x2.fromFloat](portable-simd.md#floating-point-to-integer) |
-| `i64x2.trunc_u(a: v128) -> (result: v128, fail: i32) -> i64x2` | [u64x2.fromFloat](portable-simd.md#floating-point-to-integer) |
+| WebAssembly                                               | Portable SIMD |
+|:----------------------------------------------------------|:--------------|
+| `i64x2.build(x: i64[2]) -> v128`                          | [i64x2.build](portable-simd.md#build-vector-from-individual-lanes) |
+| `i64x2.splat(x: i64) -> v128`                             | [i64x2.splat](portable-simd.md#create-vector-with-identical-lanes) |
+| `i64x2.extractLane(a: v128, i: LaneIdx2) -> i64`          | [i64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i64x2.replaceLane(a: v128, i: LaneIdx2, x: i64) -> v128` | [i64x2.replaceLane](portable-simd.md#replace-lane-value) |
+| `i64x2.add(a: v128, b: v128) -> v128`                     | [i64x2.add](portable-simd.md#integer-addition) |
+| `i64x2.sub(a: v128, b: v128) -> v128`                     | [i64x2.sub](portable-simd.md#integer-subtraction) |
+| `i64x2.mul(a: v128, b: v128) -> v128`                     | [i64x2.mul](portable-simd.md#integer-multiplication) |
+| `i64x2.neg(a: v128) -> v128`                              | [i64x2.neg](portable-simd.md#integer-negation) |
+| `i64x2.shl(a: v128, y: i32) -> v128`                      | [i64x2.shiftLeftByScalar](portable-simd.md#left-shift-by-scalar) |
+| `i64x2.shr_s(a: v128, y: i32) -> v128`                    | [s64x2.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
+| `i64x2.shr_u(a: v128, y: i32) -> v128`                    | [u64x2.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
+| `i64x2.eq(a: v128, b: v128) -> b64x2`                     | [i64x2.equal](portable-simd.md#equality) |
+| `i64x2.ne(a: v128, b: v128) -> b64x2`                     | [i64x2.notEqual](portable-simd.md#non-equality) |
+| `i64x2.lt_s(a: v128, b: v128) -> b64x2`                   | [s64x2.lessThan](portable-simd.md#less-than) |
+| `i64x2.lt_u(a: v128, b: v128) -> b64x2`                   | [u64x2.lessThan](portable-simd.md#less-than) |
+| `i64x2.le_s(a: v128, b: v128) -> b64x2`                   | [s64x2.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
+| `i64x2.le_u(a: v128, b: v128) -> b64x2`                   | [u64x2.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
+| `i64x2.gt_s(a: v128, b: v128) -> b64x2`                   | [s64x2.greaterThan](portable-simd.md#greater-than) |
+| `i64x2.gt_u(a: v128, b: v128) -> b64x2`                   | [u64x2.greaterThan](portable-simd.md#greater-than) |
+| `i64x2.ge_s(a: v128, b: v128) -> b64x2`                   | [s64x2.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
+| `i64x2.ge_u(a: v128, b: v128) -> b64x2`                   | [u64x2.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
+| `i64x2.trunc_s/f64x2(a: v128) -> v128`                    | [s64x2.fromFloat](portable-simd.md#floating-point-to-integer) |
+| `i64x2.trunc_u/f64x2(a: v128) -> v128`                    | [u64x2.fromFloat](portable-simd.md#floating-point-to-integer) |
 
 ## `f64x2` operations
-| WebAssembly                                                | Portable SIMD |
-|:-----------------------------------------------------------|:--------------|
-| `f64x2.build(x: f64[2]) -> v128`                           | [f64x2.build](portable-simd.md#build-vector-from-individual-lanes) |
-| `f64x2.splat(x: f64) -> v128`                              | [f64x2.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `f64x2.extractLane(a: v128, i: LaneIdx2) -> f64`           | [f64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `f64x2.replaceLane(a: v128, i: LaneIdx2, x: f64) -> v128`  | [f64x2.replaceLane](portable-simd.md#replace-lane-value) |
-| `f64x2.add(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f64x2.add](portable-simd.md#addition) |
-| `f64x2.sub(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f64x2.sub](portable-simd.md#subtraction) |
-| `f64x2.mul(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f64x2.mul](portable-simd.md#multiplication) |
-| `f64x2.neg(a: v128) -> v128`                               | [f64x2.neg](portable-simd.md#negation) |
-| `f64x2.eq(a: v128, b: v128) -> b64x2`                      | [f64x2.equal](portable-simd.md#equality) |
-| `f64x2.ne(a: v128, b: v128) -> b64x2`                      | [f64x2.notEqual](portable-simd.md#non-equality) |
-| `f64x2.lt(a: v128, b: v128) -> b64x2`                      | [f64x2.lessThan](portable-simd.md#less-than) |
-| `f64x2.le(a: v128, b: v128) -> b64x2`                      | [f64x2.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
-| `f64x2.gt(a: v128, b: v128) -> b64x2`                      | [f64x2.greaterThan](portable-simd.md#greater-than) |
-| `f64x2.ge(a: v128, b: v128) -> b64x2`                      | [f64x2.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
-| `f64x2.abs(a: v128) -> v128`                               | [f64x2.abs](portable-simd.md#absolute-value) |
-| `f64x2.min(a: v128, b: v128) -> v128`                      | [f64x2.min](portable-simd.md#nan-propagating-minimum) |
-| `f64x2.max(a: v128, b: v128) -> v128`                      | [f64x2.max](portable-simd.md#nan-propagating-maximum) |
-| `f64x2.div(a: v128, b: v128, rmode: RoundingMode) -> v128` | [f64x2.div](portable-simd.md#division) |
-| `f64x2.sqrt(a: v128, rmode: RoundingMode) -> v128`         | [f64x2.sqrt](portable-simd.md#square-root) |
-| `f64x2.reciprocalApproximation(a: v128) -> v128`           | [f64x2.reciprocalApproximation](portable-simd.md#reciprocal-approximation) |
-| `f64x2.reciprocalSqrtApproximation(a: v128) -> v128`       | [f64x2.reciprocalSqrtApproximation](portable-simd.md#reciprocal-square-root-approximation) |
-| `f64x2.convert_s(a: v128, rmode: RoundingMode) -> v128`    | [f64x2.fromSignedInt](portable-simd.md#integer-to-floating-point) |
-| `f64x2.convert_u(a: v128, rmode: RoundingMode) -> v128`    | [f64x2.fromUnsignedInt](portable-simd.md#integer-to-floating-point) |
+| WebAssembly                                                   | Portable SIMD |
+|:--------------------------------------------------------------|:--------------|
+| `f64x2.build(x: f64[2]) -> v128`                              | [f64x2.build](portable-simd.md#build-vector-from-individual-lanes) |
+| `f64x2.splat(x: f64) -> v128`                                 | [f64x2.splat](portable-simd.md#create-vector-with-identical-lanes) |
+| `f64x2.extractLane(a: v128, i: LaneIdx2) -> f64`              | [f64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `f64x2.replaceLane(a: v128, i: LaneIdx2, x: f64) -> v128`     | [f64x2.replaceLane](portable-simd.md#replace-lane-value) |
+| `f64x2.add(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f64x2.add](portable-simd.md#addition) |
+| `f64x2.sub(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f64x2.sub](portable-simd.md#subtraction) |
+| `f64x2.mul(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f64x2.mul](portable-simd.md#multiplication) |
+| `f64x2.neg(a: v128) -> v128`                                  | [f64x2.neg](portable-simd.md#negation) |
+| `f64x2.eq(a: v128, b: v128) -> b64x2`                         | [f64x2.equal](portable-simd.md#equality) |
+| `f64x2.ne(a: v128, b: v128) -> b64x2`                         | [f64x2.notEqual](portable-simd.md#non-equality) |
+| `f64x2.lt(a: v128, b: v128) -> b64x2`                         | [f64x2.lessThan](portable-simd.md#less-than) |
+| `f64x2.le(a: v128, b: v128) -> b64x2`                         | [f64x2.lessThanOrEqual](portable-simd.md#less-than-or-equal) |
+| `f64x2.gt(a: v128, b: v128) -> b64x2`                         | [f64x2.greaterThan](portable-simd.md#greater-than) |
+| `f64x2.ge(a: v128, b: v128) -> b64x2`                         | [f64x2.greaterThanOrEqual](portable-simd.md#greater-than-or-equal) |
+| `f64x2.abs(a: v128) -> v128`                                  | [f64x2.abs](portable-simd.md#absolute-value) |
+| `f64x2.min(a: v128, b: v128) -> v128`                         | [f64x2.min](portable-simd.md#nan-propagating-minimum) |
+| `f64x2.max(a: v128, b: v128) -> v128`                         | [f64x2.max](portable-simd.md#nan-propagating-maximum) |
+| `f64x2.div(a: v128, b: v128, rmode: RoundingMode) -> v128`    | [f64x2.div](portable-simd.md#division) |
+| `f64x2.sqrt(a: v128, rmode: RoundingMode) -> v128`            | [f64x2.sqrt](portable-simd.md#square-root) |
+| `f64x2.reciprocalApproximation(a: v128) -> v128`              | [f64x2.reciprocalApproximation](portable-simd.md#reciprocal-approximation) |
+| `f64x2.reciprocalSqrtApproximation(a: v128) -> v128`          | [f64x2.reciprocalSqrtApproximation](portable-simd.md#reciprocal-square-root-approximation) |
+| `f64x2.convert_s/i64x2(a: v128, rmode: RoundingMode) -> v128` | [f64x2.fromSignedInt](portable-simd.md#integer-to-floating-point) |
+| `f64x2.convert_u/i64x2(a: v128, rmode: RoundingMode) -> v128` | [f64x2.fromUnsignedInt](portable-simd.md#integer-to-floating-point) |
 
 ## `b8x16` operations
 | WebAssembly                                                  | Portable SIMD |
