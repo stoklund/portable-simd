@@ -16,3 +16,4 @@ webassembly-opcodes.md: webassembly-opcodes.py simdspec.py portable-simd.md
 .PHONY: check
 check:
 	flake8 .
+	mypy .

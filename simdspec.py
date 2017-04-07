@@ -2,25 +2,26 @@
 # Represent portable SIMD spec objects
 #
 import re
+from typing import List, Tuple, Dict  # noqa
 
 
 class Interpretation(object):
     '''One of the SIMD types or interpretations'''
 
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         self.name = name
-        self.parent = None
-        self.children = list()
+        self.parent = None  # type: Interpretation
+        self.children = list()  # type: List[Interpretation]
         # Operations defined directly on this interpretation.
-        self.operations = list()
+        self.operations = list()  # type: List[Operation]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'Interpretation({})'.format(self.name)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def pre(self):
+    def pre(self) -> Tuple['Interpretation', ...]:
         '''
         Get a tuple containing a pre-order of all the children, starting with
         self.
@@ -36,19 +37,18 @@ class Operation(object):
     `i32x4.add`, `i8x16.add`, ...
     '''
 
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         self.name = name
-        # Map Interpretation -> signature.
-        self.signatures = dict()
+        self.signatures = dict()  # type: Dict[Interpretation, Signature]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def add_signature(self, interp, sig):
+    def add_signature(self, interp: Interpretation, sig: 'Signature') -> None:
         assert interp not in self.signatures, "Duplicate signature"
         self.signatures[interp] = sig
 
-    def get_definition(self, interp):
+    def get_definition(self, interp: Interpretation) -> Interpretation:
         '''
         Get the Interpretation where this operation is defined for
         `interp`.
@@ -74,20 +74,27 @@ class Signature(object):
     is defined.
     '''
 
-    def __init__(self, interpretation, operation, args, result, anchor):
+    def __init__(
+            self,
+            interpretation: Interpretation,
+            operation: Operation,
+            args: str,
+            result: str,
+            anchor: str
+            ) -> None:
         self.interpretation = interpretation
         self.operation = operation
         self.args = args
         self.result = result
         self.anchor = anchor
 
-    def with_result(self, new_result):
+    def with_result(self, new_result: str) -> 'Signature':
         '''Return a new signature with a new result type'''
         return Signature(
                 self.interpretation, self.operation, self.args, new_result,
                 self.anchor)
 
-    def mdlink(self, ext='md'):
+    def mdlink(self, ext: str = 'md') -> str:
         '''Get a Markdown link to this specification.'''
         return '[{}.{}](portable-simd.{}{})'.format(
                 self.interpretation, self.operation, ext, self.anchor)
@@ -96,20 +103,20 @@ class Signature(object):
 class Specification(object):
     '''Collection of SIMD specification objects'''
 
-    def __init__(self):
-        # List of types/interpretations in order of appearence.
-        self.interpretations = list()
-        self.interpretations_byname = dict()
-        self.operations = list()
-        self.operations_byname = dict()
+    def __init__(self) -> None:
+        # List of types/interpretations in order of appearance.
+        self.interpretations = list()  # type: List[Interpretation]
+        self.interpretations_byname = dict()  # type: Dict[str, Interpretation]
+        self.operations = list()  # type: List[Operation]
+        self.operations_byname = dict()  # type: Dict[str, Operation]
 
-    def add_interpretation(self, interp):
+    def add_interpretation(self, interp: Interpretation) -> None:
         '''Register a new Interpretation object'''
         assert interp.name not in self.interpretations_byname, "Duplicate"
         self.interpretations.append(interp)
         self.interpretations_byname[interp.name] = interp
 
-    def get_operation(self, name):
+    def get_operation(self, name: str) -> Operation:
         '''
         Get an `Operation` object with the requested name.
 
@@ -122,7 +129,7 @@ class Specification(object):
         self.operations_byname[name] = op
         return op
 
-    def extract_interpretations(self, text):
+    def extract_interpretations(self, text: str) -> None:
         '''
         Find new `Interpretation` declarations in the text, add them to spec.
         '''
@@ -140,13 +147,15 @@ class Specification(object):
                 interp.parent.children.append(interp)
             self.add_interpretation(interp)
 
-    def extract_operations(self, text):
+    def extract_operations(
+            self, text: str
+            ) -> List[Tuple[Interpretation, Operation]]:
         '''Find new `Operation` declarations in the text.'''
         # Operations look like:
         #
         # * `i32x4.add(a : v128, b : v128) -> v128`
         #
-        found = list()
+        found = list()  # type: List[Tuple[Interpretation, Operation]]
         anchor = None
         for m in re.finditer(
                 r'^#+\s*(.*)|' +
@@ -168,7 +177,7 @@ class Specification(object):
             found.append((interp, op))
         return found
 
-    def parse(self, text):
+    def parse(self, text: str) -> None:
         '''Parse the spec text and add all definitions to self'''
         self.extract_interpretations(text)
         self.extract_operations(text)

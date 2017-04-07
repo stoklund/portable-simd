@@ -4,6 +4,7 @@
 #
 import re
 import simdspec
+from typing import Tuple, Iterable
 
 spec = simdspec.Specification()
 with open('portable-simd.md') as f:
@@ -41,10 +42,15 @@ name_map = {
 # Format a signature for wasm.
 #
 # name: Name of the wasm opcode.
-# sig: (args, result) tuple from Operation.
+# sig: Signature from Operation.
 # res_type: String with the name of the result SIMD type.
 # arg_type: None, or name of argument SIMD type. Defaults to res_type.
-def format_sig(name, sig, res_type, arg_type=None):
+def format_sig(
+        name: str,
+        sig: simdspec.Signature,
+        res_type: str,
+        arg_type: str = None
+        ) -> str:
     if arg_type is None:
         arg_type = res_type
     args = re.sub(r'\b(i8|i16|boolean)\b', 'i32', sig.args)
@@ -58,7 +64,9 @@ def format_sig(name, sig, res_type, arg_type=None):
 
 # Yield tuples (wsig, psig) for each wasm operation on interpretation
 # `it`.
-def wasm_sigs(it):
+def wasm_sigs(
+        it: simdspec.Interpretation
+        ) -> Iterable[Tuple[str, simdspec.Signature]]:
     # Pre-order of children, self removed.
     children = it.pre()[1:]
 
@@ -119,7 +127,7 @@ for it in wasm:
     for wsig, psig in sigs:
         wsig = '`{}`'.format(wsig)
         if psig:
-            psig = psig.mdlink()
+            str_psig = psig.mdlink()
         else:
-            psig = '-'
-        print('| {} | {} |'.format(wsig.ljust(maxw), psig))
+            str_psig = '-'
+        print('| {} | {} |'.format(wsig.ljust(maxw), str_psig))
