@@ -110,6 +110,14 @@ class Specification(object):
         self.operations = list()  # type: List[Operation]
         self.operations_byname = dict()  # type: Dict[str, Operation]
 
+    def interpretations_pre(self) -> Tuple[Interpretation, ...]:
+        '''
+        Get a tuple containing a pre-order of all the interpretations.
+        '''
+        return sum(
+                [it.pre() for it in self.interpretations
+                    if it.parent is None], ())
+
     def add_interpretation(self, interp: Interpretation) -> None:
         '''Register a new Interpretation object'''
         assert interp.name not in self.interpretations_byname, "Duplicate"

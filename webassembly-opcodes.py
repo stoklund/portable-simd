@@ -18,9 +18,11 @@ specification](portable-simd.md) using [the WebAssembly
 mapping](webassembly-mapping.md).
 ''')
 
-# Get the interpretations that correspond to Wasm types.
-wasm = [it for it in spec.interpretations if len(it.operations) > 0 and
-        it.name[0] in 'ifb']
+# Get the interpretations that correspond to the WebAssembly opcode naming
+# scheme: vxxx, ints, floats, and bools. Unsigned/signed are represented as
+# `_u` and `_s` suffixes instead.
+wasm = [it for it in spec.interpretations_pre()
+        if len(it.operations) > 0 and it.name[0] in 'vifb']
 
 # Mapping table for operation name stems. The `type.` prefix and any `_u` or
 # `_s` suffixes are added automatically.
@@ -43,22 +45,15 @@ name_map = {
 #
 # name: Name of the wasm opcode.
 # sig: Signature from Operation.
-# res_type: String with the name of the result SIMD type.
-# arg_type: None, or name of argument SIMD type. Defaults to res_type.
 def format_sig(
         name: str,
         sig: simdspec.Signature,
-        res_type: str,
-        arg_type: str = None
         ) -> str:
-    if arg_type is None:
-        arg_type = res_type
     args = re.sub(r'\b(i8|i16|boolean)\b', 'i32', sig.args)
-    args = args.replace('v128', arg_type)
     if sig.result is None:
         return '{}({})'.format(name, args)
     else:
-        result = sig.result.replace('v128', res_type).replace('boolean', 'i32')
+        result = sig.result.replace('boolean', 'i32')
         return '{}({}) -> {}'.format(name, args, result)
 
 
@@ -70,49 +65,35 @@ def wasm_sigs(
     # Pre-order of children, self removed.
     children = it.pre()[1:]
 
-    # Generate bit cast operations.
-    if it.name[0] != 'b':
-        for from_it in (i.name for i in wasm if i != it and i.name[0] != 'b'):
-            wsig = '{}.reinterpret/{}(a: {}) -> {}'.format(
-                    it.name, from_it, from_it, it.name)
-            yield (wsig, None)
-
-    # Generate real operations.
     for op in spec.operations:
         # These operations are not mapped to WebAssembly.
         if op.name in ('minNum', 'maxNum'):
             continue
         op_name = '{}.{}'.format(it.name, name_map.get(op.name, op.name))
         op_it = op.get_definition(it)
-        if op_it:
-            # This operation has a definition for `it` or one of its parents.
+        if op_it == it:
+            # This operation has a definition for `it`.
             sig = op.signatures[op_it]
-            arg_type = it.name
-            # Special cases where arg_type != res_type.
-            if op.name in ('fromSignedInt', 'fromUnsignedInt'):
-                arg_type = 'i' + it.name[1:]
             # Create s/u variants for functions that have i8/i16 results.
             if sig.result in ('i8', 'i16'):
                 sig = sig.with_result('i32')
-                yield (format_sig(op_name+'_s', sig, it.name, arg_type), sig)
-                yield (format_sig(op_name+'_u', sig, it.name, arg_type), sig)
+                yield (format_sig(op_name+'_s', sig), sig)
+                yield (format_sig(op_name+'_u', sig), sig)
             else:
-                yield (format_sig(op_name, sig, it.name, arg_type), sig)
-        else:
-            # Check for child interpretation definitions.
+                yield (format_sig(op_name, sig), sig)
+        elif op_it is None and it.name[0] == 'i':
+            # Check for child interpretation definitions for integer
+            # interpretations.
             for ch_it in children:
                 if op.get_definition(ch_it) == ch_it:
                     sig = op.signatures[ch_it]
-                    arg_type = it.name
-                    # Special cases where arg_type != res_type.
-                    if op.name in ('fromFloat'):
-                        arg_type = 'f' + it.name[1:]
-                        # Also replace the (result, fail) result tuple.
+                    if op.name in ('fromFloat',):
+                        # Replace the (result, fail) result tuple.
                         # This operation traps in wasm.
                         sig = sig.with_result(it.name)
                     # Create a '_s' or _u suffixed opcode.
                     suffixed = '{}_{}'.format(op_name, ch_it.name[0])
-                    wsig = format_sig(suffixed, sig, it.name, arg_type)
+                    wsig = format_sig(suffixed, sig)
                     yield (wsig, sig)
 
 
