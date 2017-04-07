@@ -1,4 +1,5 @@
 PANDOC=pandoc --from=markdown_github --to=html5 --standalone
+PYTHON=python3
 
 all: portable-simd.html matrix.md matrix.html \
     javascript-mapping.html webassembly-mapping.html webassembly-opcodes.html
@@ -7,7 +8,11 @@ all: portable-simd.html matrix.md matrix.html \
 	$(PANDOC) $< -o $@
 
 matrix.md: matrix.py simdspec.py portable-simd.md
-	python matrix.py > $@
+	$(PYTHON) matrix.py > $@
 
 webassembly-opcodes.md: webassembly-opcodes.py simdspec.py portable-simd.md
-	python webassembly-opcodes.py > $@
+	$(PYTHON) webassembly-opcodes.py > $@
+
+.PHONY: check
+check:
+	flake8 .

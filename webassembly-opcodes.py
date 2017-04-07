@@ -105,8 +105,8 @@ def wasm_sigs(it):
                     # Create a '_s' or _u suffixed opcode.
                     suffixed = '{}_{}'.format(op_name, ch_it.name[0])
                     wsig = format_sig(suffixed, sig, it.name, arg_type)
-                    psig = '{}.{}'.format(ch_it.name, op.name)
                     yield (wsig, sig)
+
 
 for it in wasm:
     print('')

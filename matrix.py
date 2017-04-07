@@ -26,10 +26,11 @@ simd = [it for it in spec.interpretations if len(it.operations) > 0 and
 maxoname = max(len(op.name) for op in spec.operations)
 maxiname = max(len(it.name) for it in simd)
 
-print('| {} | {} |'.format('Operation'.ljust(maxoname),
+print('| {} | {} |'.format(
+    'Operation'.ljust(maxoname),
     ' | '.join(it.name.center(maxiname) for it in simd)))
-print('|-{}-|:{}:|'.format('-'*maxoname,
-    ':|:'.join('-'*maxiname for it in simd)))
+print('|-{}-|:{}:|'.format(
+    '-'*maxoname, ':|:'.join('-'*maxiname for it in simd)))
 
 for op in spec.operations:
     line = list()
@@ -39,5 +40,6 @@ for op in spec.operations:
             line.append('Y')
         else:
             line.append(d.name if d else '')
-    print('| {} | {} |'.format(op.name.ljust(maxoname),
+    print('| {} | {} |'.format(
+        op.name.ljust(maxoname),
         ' | '.join(s.center(maxiname) for s in line)))
