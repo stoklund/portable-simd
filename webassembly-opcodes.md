@@ -6,6 +6,16 @@ specification](portable-simd.md) using [the WebAssembly
 mapping](webassembly-mapping.md).
 
 
+The SIMD operations are grouped according to their interpretation of the input
+vectors.
+
+| Shape | Int | Float | Bool |
+|:-----:|:---:|:-----:|:----:|
+| [v8x16](#v8x16-operations) | [i8x16](#i8x16-operations) | - | [b8x16](#b8x16-operations) |
+| [v16x8](#v16x8-operations) | [i16x8](#i16x8-operations) | - | [b16x8](#b16x8-operations) |
+| [v32x4](#v32x4-operations) | [i32x4](#i32x4-operations) | [f32x4](#f32x4-operations) | [b32x4](#b32x4-operations) |
+| [v64x2](#v64x2-operations) | [i64x2](#i64x2-operations) | [f64x2](#f64x2-operations) | [b64x2](#b64x2-operations) |
+
 ## `v128` operations
 | WebAssembly                          | Portable SIMD |
 |:-------------------------------------|:--------------|

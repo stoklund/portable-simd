@@ -24,6 +24,26 @@ mapping](webassembly-mapping.md).
 wasm = [it for it in spec.interpretations_pre()
         if len(it.operations) > 0 and it.name[0] in 'vifb']
 
+
+# Begin with a table of links to the interpretations, except for `v128`.
+def print_toc() -> None:
+    print('''
+The SIMD operations are grouped according to their interpretation of the input
+vectors.
+
+| Shape | Int | Float | Bool |
+|:-----:|:---:|:-----:|:----:|''')
+
+    for shape in ('8x16', '16x8', '32x4', '64x2'):
+        for prefix in 'vifb':
+            it = prefix + shape
+            if it in spec.interpretations_byname:
+                print('| [{it}](#{it}-operations) '.format(it=it), end='')
+            else:
+                print('| - ', end='')
+        print('|')
+
+
 # Mapping table for operation name stems. The `type.` prefix and any `_u` or
 # `_s` suffixes are added automatically.
 name_map = {
@@ -97,6 +117,7 @@ def wasm_sigs(
                     yield (wsig, sig)
 
 
+print_toc()
 for it in wasm:
     print('')
     print('## `{}` operations'.format(it.name))
