@@ -1,13 +1,7 @@
-
 # WebAssembly SIMD operations
 
-This table is generated automatically from [the
-specification](portable-simd.md) using [the WebAssembly
-mapping](webassembly-mapping.md).
-
-
 The SIMD operations are grouped according to the interpretation of the input
-and output vectors.
+and output vectors:
 
 | Shape | Int | Float | Bool |
 |:-----:|:---:|:-----:|:----:|

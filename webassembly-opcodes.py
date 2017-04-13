@@ -23,14 +23,6 @@ def add_v128_load_store() -> None:
             v128, op, prev.args, prev.result, prev.anchor))
 
 
-print('''
-# WebAssembly SIMD operations
-
-This table is generated automatically from [the
-specification](portable-simd.md) using [the WebAssembly
-mapping](webassembly-mapping.md).
-''')
-
 # Get the interpretations that correspond to the WebAssembly opcode naming
 # scheme: vxxx, ints, floats, and bools. Unsigned/signed are represented as
 # `_u` and `_s` suffixes instead.
@@ -40,9 +32,10 @@ wasm = [it for it in spec.interpretations_pre()
 
 # Begin with a table of links to the interpretations, except for `v128`.
 def print_toc() -> None:
-    print('''
+    print('''# WebAssembly SIMD operations
+
 The SIMD operations are grouped according to the interpretation of the input
-and output vectors.
+and output vectors:
 
 | Shape | Int | Float | Bool |
 |:-----:|:---:|:-----:|:----:|''')
