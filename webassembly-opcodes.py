@@ -144,14 +144,12 @@ for it in wasm:
     print('')
     print('## `{}` operations'.format(it.name))
     sigs = list(wasm_sigs(it))
-    maxw = 2 + max(len(w) for w, p in sigs)
 
-    print('| {} | {} |'.format('WebAssembly'.ljust(maxw), 'Portable SIMD'))
-    print('|:{}-|:--------------|'.format('-' * maxw))
+    print('| WebAssembly | Portable SIMD |')
+    print('|:------------|:--------------|')
     for wsig, psig in sigs:
-        wsig = '`{}`'.format(wsig)
         if psig:
             str_psig = psig.mdlink()
         else:
             str_psig = '-'
-        print('| {} | {} |'.format(wsig.ljust(maxw), str_psig))
+        print('| `{}` | {} |'.format(wsig, str_psig))
