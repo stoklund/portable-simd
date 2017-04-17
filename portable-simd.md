@@ -435,6 +435,9 @@ def S.Reduce(x):
     return x & bitmask
 ```
 
+There is no integer division operation provided here. This operation is not
+commonly part of bit 128-bit SIMD ISAs.
+
 ### Integer addition
 * `i8x16.add(a: v128, b: v128) -> v128`
 * `i16x8.add(a: v128, b: v128) -> v128`
@@ -703,7 +706,7 @@ boolean vector with the same number of lanes as the input interpretation.
 
 Integer equality is independent of the signed/unsigned interpretation. Floating
 point equality follows IEEE semantics, so a NaN lane compares not equal with
-anything, including itself:
+anything, including itself, and +0.0 is equal to -0.0:
 
 ```python
 def S.equal(a, b):
