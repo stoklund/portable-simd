@@ -66,6 +66,14 @@ name_map = {
         'fromUnsignedInt': 'convert_u'
         }
 
+# List of operations that are omitted from the WebAssembly proposal.
+omitted = (
+        'minNum',
+        'maxNum',
+        'reciprocalApproximation',
+        'reciprocalSqrtApproximation',
+        )
+
 
 # Format a signature for wasm.
 #
@@ -97,7 +105,7 @@ def wasm_sigs(
 
     for op in spec.operations:
         # These operations are not mapped to WebAssembly.
-        if op.name in ('minNum', 'maxNum'):
+        if op.name in omitted:
             continue
         # Skip the geometry-specific load/store operations. We use a single
         # `v128` definition instead.
