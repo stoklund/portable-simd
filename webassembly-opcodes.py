@@ -75,6 +75,11 @@ omitted = (
         )
 
 
+# Convert operation name to snake_case.
+def snake_case(n: str) -> str:
+    return re.sub(r'[A-Z]', lambda c: '_' + c.group().lower(), n)
+
+
 # Format a signature for wasm.
 #
 # name: Name of the wasm opcode.
@@ -112,7 +117,11 @@ def wasm_sigs(
         if it.parent and op.name in ('load', 'store'):
             continue
 
-        op_name = '{}.{}'.format(it.name, name_map.get(op.name, op.name))
+        if op.name in name_map:
+            op_name = name_map[op.name]
+        else:
+            op_name = snake_case(op.name)
+        op_name = '{}.{}'.format(it.name, op_name)
         op_it = op.get_definition(it)
         if op_it == it:
             # This operation has a definition for `it`.

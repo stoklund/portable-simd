@@ -32,17 +32,17 @@ and output vectors:
 |:------------|:--------------|
 | `i8x16.build(x: i32[16]) -> v128` | [i8x16.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `i8x16.splat(x: i32) -> v128` | [i8x16.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `i8x16.extractLane_s(a: v128, i: LaneIdx16) -> i32` | [i8x16.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i8x16.extractLane_u(a: v128, i: LaneIdx16) -> i32` | [i8x16.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i8x16.replaceLane(a: v128, i: LaneIdx16, x: i32) -> v128` | [i8x16.replaceLane](portable-simd.md#replace-lane-value) |
+| `i8x16.extract_lane_s(a: v128, i: LaneIdx16) -> i32` | [i8x16.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i8x16.extract_lane_u(a: v128, i: LaneIdx16) -> i32` | [i8x16.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i8x16.replace_lane(a: v128, i: LaneIdx16, x: i32) -> v128` | [i8x16.replaceLane](portable-simd.md#replace-lane-value) |
 | `i8x16.add(a: v128, b: v128) -> v128` | [i8x16.add](portable-simd.md#integer-addition) |
 | `i8x16.sub(a: v128, b: v128) -> v128` | [i8x16.sub](portable-simd.md#integer-subtraction) |
 | `i8x16.mul(a: v128, b: v128) -> v128` | [i8x16.mul](portable-simd.md#integer-multiplication) |
 | `i8x16.neg(a: v128) -> v128` | [i8x16.neg](portable-simd.md#integer-negation) |
-| `i8x16.addSaturate_s(a: v128, b: v128) -> v128` | [s8x16.addSaturate](portable-simd.md#saturating-integer-addition) |
-| `i8x16.addSaturate_u(a: v128, b: v128) -> v128` | [u8x16.addSaturate](portable-simd.md#saturating-integer-addition) |
-| `i8x16.subSaturate_s(a: v128, b: v128) -> v128` | [s8x16.subSaturate](portable-simd.md#saturating-integer-subtraction) |
-| `i8x16.subSaturate_u(a: v128, b: v128) -> v128` | [u8x16.subSaturate](portable-simd.md#saturating-integer-subtraction) |
+| `i8x16.add_saturate_s(a: v128, b: v128) -> v128` | [s8x16.addSaturate](portable-simd.md#saturating-integer-addition) |
+| `i8x16.add_saturate_u(a: v128, b: v128) -> v128` | [u8x16.addSaturate](portable-simd.md#saturating-integer-addition) |
+| `i8x16.sub_saturate_s(a: v128, b: v128) -> v128` | [s8x16.subSaturate](portable-simd.md#saturating-integer-subtraction) |
+| `i8x16.sub_saturate_u(a: v128, b: v128) -> v128` | [u8x16.subSaturate](portable-simd.md#saturating-integer-subtraction) |
 | `i8x16.shl(a: v128, y: i32) -> v128` | [i8x16.shiftLeftByScalar](portable-simd.md#left-shift-by-scalar) |
 | `i8x16.shr_s(a: v128, y: i32) -> v128` | [s8x16.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
 | `i8x16.shr_u(a: v128, y: i32) -> v128` | [u8x16.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
@@ -69,17 +69,17 @@ and output vectors:
 |:------------|:--------------|
 | `i16x8.build(x: i32[8]) -> v128` | [i16x8.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `i16x8.splat(x: i32) -> v128` | [i16x8.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `i16x8.extractLane_s(a: v128, i: LaneIdx8) -> i32` | [i16x8.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i16x8.extractLane_u(a: v128, i: LaneIdx8) -> i32` | [i16x8.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i16x8.replaceLane(a: v128, i: LaneIdx8, x: i32) -> v128` | [i16x8.replaceLane](portable-simd.md#replace-lane-value) |
+| `i16x8.extract_lane_s(a: v128, i: LaneIdx8) -> i32` | [i16x8.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i16x8.extract_lane_u(a: v128, i: LaneIdx8) -> i32` | [i16x8.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i16x8.replace_lane(a: v128, i: LaneIdx8, x: i32) -> v128` | [i16x8.replaceLane](portable-simd.md#replace-lane-value) |
 | `i16x8.add(a: v128, b: v128) -> v128` | [i16x8.add](portable-simd.md#integer-addition) |
 | `i16x8.sub(a: v128, b: v128) -> v128` | [i16x8.sub](portable-simd.md#integer-subtraction) |
 | `i16x8.mul(a: v128, b: v128) -> v128` | [i16x8.mul](portable-simd.md#integer-multiplication) |
 | `i16x8.neg(a: v128) -> v128` | [i16x8.neg](portable-simd.md#integer-negation) |
-| `i16x8.addSaturate_s(a: v128, b: v128) -> v128` | [s16x8.addSaturate](portable-simd.md#saturating-integer-addition) |
-| `i16x8.addSaturate_u(a: v128, b: v128) -> v128` | [u16x8.addSaturate](portable-simd.md#saturating-integer-addition) |
-| `i16x8.subSaturate_s(a: v128, b: v128) -> v128` | [s16x8.subSaturate](portable-simd.md#saturating-integer-subtraction) |
-| `i16x8.subSaturate_u(a: v128, b: v128) -> v128` | [u16x8.subSaturate](portable-simd.md#saturating-integer-subtraction) |
+| `i16x8.add_saturate_s(a: v128, b: v128) -> v128` | [s16x8.addSaturate](portable-simd.md#saturating-integer-addition) |
+| `i16x8.add_saturate_u(a: v128, b: v128) -> v128` | [u16x8.addSaturate](portable-simd.md#saturating-integer-addition) |
+| `i16x8.sub_saturate_s(a: v128, b: v128) -> v128` | [s16x8.subSaturate](portable-simd.md#saturating-integer-subtraction) |
+| `i16x8.sub_saturate_u(a: v128, b: v128) -> v128` | [u16x8.subSaturate](portable-simd.md#saturating-integer-subtraction) |
 | `i16x8.shl(a: v128, y: i32) -> v128` | [i16x8.shiftLeftByScalar](portable-simd.md#left-shift-by-scalar) |
 | `i16x8.shr_s(a: v128, y: i32) -> v128` | [s16x8.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
 | `i16x8.shr_u(a: v128, y: i32) -> v128` | [u16x8.shiftRightByScalar](portable-simd.md#right-shift-by-scalar) |
@@ -112,8 +112,8 @@ and output vectors:
 |:------------|:--------------|
 | `i32x4.build(x: i32[4]) -> v128` | [i32x4.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `i32x4.splat(x: i32) -> v128` | [i32x4.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `i32x4.extractLane(a: v128, i: LaneIdx4) -> i32` | [i32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i32x4.replaceLane(a: v128, i: LaneIdx4, x: i32) -> v128` | [i32x4.replaceLane](portable-simd.md#replace-lane-value) |
+| `i32x4.extract_lane(a: v128, i: LaneIdx4) -> i32` | [i32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i32x4.replace_lane(a: v128, i: LaneIdx4, x: i32) -> v128` | [i32x4.replaceLane](portable-simd.md#replace-lane-value) |
 | `i32x4.add(a: v128, b: v128) -> v128` | [i32x4.add](portable-simd.md#integer-addition) |
 | `i32x4.sub(a: v128, b: v128) -> v128` | [i32x4.sub](portable-simd.md#integer-subtraction) |
 | `i32x4.mul(a: v128, b: v128) -> v128` | [i32x4.mul](portable-simd.md#integer-multiplication) |
@@ -139,8 +139,8 @@ and output vectors:
 |:------------|:--------------|
 | `f32x4.build(x: f32[4]) -> v128` | [f32x4.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `f32x4.splat(x: f32) -> v128` | [f32x4.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `f32x4.extractLane(a: v128, i: LaneIdx4) -> f32` | [f32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `f32x4.replaceLane(a: v128, i: LaneIdx4, x: f32) -> v128` | [f32x4.replaceLane](portable-simd.md#replace-lane-value) |
+| `f32x4.extract_lane(a: v128, i: LaneIdx4) -> f32` | [f32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `f32x4.replace_lane(a: v128, i: LaneIdx4, x: f32) -> v128` | [f32x4.replaceLane](portable-simd.md#replace-lane-value) |
 | `f32x4.add(a: v128, b: v128) -> v128` | [f32x4.add](portable-simd.md#addition) |
 | `f32x4.sub(a: v128, b: v128) -> v128` | [f32x4.sub](portable-simd.md#subtraction) |
 | `f32x4.mul(a: v128, b: v128) -> v128` | [f32x4.mul](portable-simd.md#multiplication) |
@@ -171,8 +171,8 @@ and output vectors:
 |:------------|:--------------|
 | `i64x2.build(x: i64[2]) -> v128` | [i64x2.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `i64x2.splat(x: i64) -> v128` | [i64x2.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `i64x2.extractLane(a: v128, i: LaneIdx2) -> i64` | [i64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `i64x2.replaceLane(a: v128, i: LaneIdx2, x: i64) -> v128` | [i64x2.replaceLane](portable-simd.md#replace-lane-value) |
+| `i64x2.extract_lane(a: v128, i: LaneIdx2) -> i64` | [i64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `i64x2.replace_lane(a: v128, i: LaneIdx2, x: i64) -> v128` | [i64x2.replaceLane](portable-simd.md#replace-lane-value) |
 | `i64x2.add(a: v128, b: v128) -> v128` | [i64x2.add](portable-simd.md#integer-addition) |
 | `i64x2.sub(a: v128, b: v128) -> v128` | [i64x2.sub](portable-simd.md#integer-subtraction) |
 | `i64x2.mul(a: v128, b: v128) -> v128` | [i64x2.mul](portable-simd.md#integer-multiplication) |
@@ -198,8 +198,8 @@ and output vectors:
 |:------------|:--------------|
 | `f64x2.build(x: f64[2]) -> v128` | [f64x2.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `f64x2.splat(x: f64) -> v128` | [f64x2.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `f64x2.extractLane(a: v128, i: LaneIdx2) -> f64` | [f64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `f64x2.replaceLane(a: v128, i: LaneIdx2, x: f64) -> v128` | [f64x2.replaceLane](portable-simd.md#replace-lane-value) |
+| `f64x2.extract_lane(a: v128, i: LaneIdx2) -> f64` | [f64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `f64x2.replace_lane(a: v128, i: LaneIdx2, x: f64) -> v128` | [f64x2.replaceLane](portable-simd.md#replace-lane-value) |
 | `f64x2.add(a: v128, b: v128) -> v128` | [f64x2.add](portable-simd.md#addition) |
 | `f64x2.sub(a: v128, b: v128) -> v128` | [f64x2.sub](portable-simd.md#subtraction) |
 | `f64x2.mul(a: v128, b: v128) -> v128` | [f64x2.mul](portable-simd.md#multiplication) |
@@ -223,53 +223,53 @@ and output vectors:
 |:------------|:--------------|
 | `b8x16.build(x: i32[16]) -> b8x16` | [b8x16.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `b8x16.splat(x: i32) -> b8x16` | [b8x16.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `b8x16.extractLane(a: b8x16, i: LaneIdx16) -> i32` | [b8x16.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `b8x16.replaceLane(a: b8x16, i: LaneIdx16, x: i32) -> b8x16` | [b8x16.replaceLane](portable-simd.md#replace-lane-value) |
+| `b8x16.extract_lane(a: b8x16, i: LaneIdx16) -> i32` | [b8x16.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `b8x16.replace_lane(a: b8x16, i: LaneIdx16, x: i32) -> b8x16` | [b8x16.replaceLane](portable-simd.md#replace-lane-value) |
 | `b8x16.and(a: b8x16, b: b8x16) -> b8x16` | [b8x16.and](portable-simd.md#logical-and) |
 | `b8x16.or(a: b8x16, b: b8x16) -> b8x16` | [b8x16.or](portable-simd.md#logical-or) |
 | `b8x16.xor(a: b8x16, b: b8x16) -> b8x16` | [b8x16.xor](portable-simd.md#logical-xor) |
 | `b8x16.not(a: b8x16) -> b8x16` | [b8x16.not](portable-simd.md#logical-not) |
-| `b8x16.anyTrue(a: b8x16) -> i32` | [b8x16.anyTrue](portable-simd.md#any-lane-true) |
-| `b8x16.allTrue(a: b8x16) -> i32` | [b8x16.allTrue](portable-simd.md#all-lanes-true) |
+| `b8x16.any_true(a: b8x16) -> i32` | [b8x16.anyTrue](portable-simd.md#any-lane-true) |
+| `b8x16.all_true(a: b8x16) -> i32` | [b8x16.allTrue](portable-simd.md#all-lanes-true) |
 
 ## `b16x8` operations
 | WebAssembly | Portable SIMD |
 |:------------|:--------------|
 | `b16x8.build(x: i32[8]) -> b16x8` | [b16x8.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `b16x8.splat(x: i32) -> b16x8` | [b16x8.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `b16x8.extractLane(a: b16x8, i: LaneIdx8) -> i32` | [b16x8.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `b16x8.replaceLane(a: b16x8, i: LaneIdx8, x: i32) -> b16x8` | [b16x8.replaceLane](portable-simd.md#replace-lane-value) |
+| `b16x8.extract_lane(a: b16x8, i: LaneIdx8) -> i32` | [b16x8.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `b16x8.replace_lane(a: b16x8, i: LaneIdx8, x: i32) -> b16x8` | [b16x8.replaceLane](portable-simd.md#replace-lane-value) |
 | `b16x8.and(a: b16x8, b: b16x8) -> b16x8` | [b16x8.and](portable-simd.md#logical-and) |
 | `b16x8.or(a: b16x8, b: b16x8) -> b16x8` | [b16x8.or](portable-simd.md#logical-or) |
 | `b16x8.xor(a: b16x8, b: b16x8) -> b16x8` | [b16x8.xor](portable-simd.md#logical-xor) |
 | `b16x8.not(a: b16x8) -> b16x8` | [b16x8.not](portable-simd.md#logical-not) |
-| `b16x8.anyTrue(a: b16x8) -> i32` | [b16x8.anyTrue](portable-simd.md#any-lane-true) |
-| `b16x8.allTrue(a: b16x8) -> i32` | [b16x8.allTrue](portable-simd.md#all-lanes-true) |
+| `b16x8.any_true(a: b16x8) -> i32` | [b16x8.anyTrue](portable-simd.md#any-lane-true) |
+| `b16x8.all_true(a: b16x8) -> i32` | [b16x8.allTrue](portable-simd.md#all-lanes-true) |
 
 ## `b32x4` operations
 | WebAssembly | Portable SIMD |
 |:------------|:--------------|
 | `b32x4.build(x: i32[4]) -> b32x4` | [b32x4.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `b32x4.splat(x: i32) -> b32x4` | [b32x4.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `b32x4.extractLane(a: b32x4, i: LaneIdx4) -> i32` | [b32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `b32x4.replaceLane(a: b32x4, i: LaneIdx4, x: i32) -> b32x4` | [b32x4.replaceLane](portable-simd.md#replace-lane-value) |
+| `b32x4.extract_lane(a: b32x4, i: LaneIdx4) -> i32` | [b32x4.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `b32x4.replace_lane(a: b32x4, i: LaneIdx4, x: i32) -> b32x4` | [b32x4.replaceLane](portable-simd.md#replace-lane-value) |
 | `b32x4.and(a: b32x4, b: b32x4) -> b32x4` | [b32x4.and](portable-simd.md#logical-and) |
 | `b32x4.or(a: b32x4, b: b32x4) -> b32x4` | [b32x4.or](portable-simd.md#logical-or) |
 | `b32x4.xor(a: b32x4, b: b32x4) -> b32x4` | [b32x4.xor](portable-simd.md#logical-xor) |
 | `b32x4.not(a: b32x4) -> b32x4` | [b32x4.not](portable-simd.md#logical-not) |
-| `b32x4.anyTrue(a: b32x4) -> i32` | [b32x4.anyTrue](portable-simd.md#any-lane-true) |
-| `b32x4.allTrue(a: b32x4) -> i32` | [b32x4.allTrue](portable-simd.md#all-lanes-true) |
+| `b32x4.any_true(a: b32x4) -> i32` | [b32x4.anyTrue](portable-simd.md#any-lane-true) |
+| `b32x4.all_true(a: b32x4) -> i32` | [b32x4.allTrue](portable-simd.md#all-lanes-true) |
 
 ## `b64x2` operations
 | WebAssembly | Portable SIMD |
 |:------------|:--------------|
 | `b64x2.build(x: i32[2]) -> b64x2` | [b64x2.build](portable-simd.md#build-vector-from-individual-lanes) |
 | `b64x2.splat(x: i32) -> b64x2` | [b64x2.splat](portable-simd.md#create-vector-with-identical-lanes) |
-| `b64x2.extractLane(a: b64x2, i: LaneIdx2) -> i32` | [b64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
-| `b64x2.replaceLane(a: b64x2, i: LaneIdx2, x: i32) -> b64x2` | [b64x2.replaceLane](portable-simd.md#replace-lane-value) |
+| `b64x2.extract_lane(a: b64x2, i: LaneIdx2) -> i32` | [b64x2.extractLane](portable-simd.md#extract-lane-as-a-scalar) |
+| `b64x2.replace_lane(a: b64x2, i: LaneIdx2, x: i32) -> b64x2` | [b64x2.replaceLane](portable-simd.md#replace-lane-value) |
 | `b64x2.and(a: b64x2, b: b64x2) -> b64x2` | [b64x2.and](portable-simd.md#logical-and) |
 | `b64x2.or(a: b64x2, b: b64x2) -> b64x2` | [b64x2.or](portable-simd.md#logical-or) |
 | `b64x2.xor(a: b64x2, b: b64x2) -> b64x2` | [b64x2.xor](portable-simd.md#logical-xor) |
 | `b64x2.not(a: b64x2) -> b64x2` | [b64x2.not](portable-simd.md#logical-not) |
-| `b64x2.anyTrue(a: b64x2) -> i32` | [b64x2.anyTrue](portable-simd.md#any-lane-true) |
-| `b64x2.allTrue(a: b64x2) -> i32` | [b64x2.allTrue](portable-simd.md#all-lanes-true) |
+| `b64x2.any_true(a: b64x2) -> i32` | [b64x2.anyTrue](portable-simd.md#any-lane-true) |
+| `b64x2.all_true(a: b64x2) -> i32` | [b64x2.allTrue](portable-simd.md#all-lanes-true) |
